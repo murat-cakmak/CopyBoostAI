@@ -1,0 +1,17 @@
+node_modules
+.npmrc
+.DS_Store
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.next
+coverage
+.tmp
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+backend/dist
+frontend/.next
+frontend/out
