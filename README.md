@@ -80,3 +80,30 @@ CopyBoost AI, e-ticaret satıcıları ve pazarlama ekipleri için ürün başlı
 - **v1 (MVP):** Auth sistemi, ürün açıklama generator (tek dil), Free + Pro plan, Stripe entegrasyonu, basit dashboard
 - **v1.1:** Çoklu dil desteği (TR/EN/DE), ton seçenekleri, platform preset’leri (Amazon/Trendyol şablonları)
 - **v1.2:** Chrome extension (ör. Trendyol seller panel), API key + developer plan
+
+## Proje yapısı
+- `frontend/`: Next.js App Router, Tailwind CSS ve TypeScript ile landing, dashboard, generate, billing, settings ve auth sayfa iskeletleri
+- `backend/`: NestJS tabanlı API başlangıcı (`/api` prefix), healthcheck ve karşılama endpoint’leri
+
+## Lokal geliştirme
+1. Node.js 20+ kurulu olduğundan emin olun.
+2. Bağımlılıkları yüklemek için her klasörde `npm install` komutunu çalıştırın:
+   - `cd frontend && npm install`
+   - `cd backend && npm install`
+3. Geliştirme sunucularını başlatın:
+   - Frontend: `npm run dev` (varsayılan: http://localhost:3000)
+   - Backend: `npm run start:dev` (varsayılan: http://localhost:3001/api)
+4. `.env` dosyalarına OpenAI, Stripe ve veritabanı bağlantı bilgilerinizi ekleyin. Auth/Billing/Content modülleri eklenirken bu değişkenler kullanılacaktır.
+
+### Backend veritabanı ayarları
+`backend/.env` dosyasında PostgreSQL bağlantısı için aşağıdaki değişkenleri tanımlayın. Varsayılan değerler lokal PostgreSQL kuruluma uygundur ve ayarlanmadığında otomatik olarak kullanılır.
+
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=postgres
+DB_NAME=copyboost
+```
+
+Backend, TypeORM ile otomatik şema oluşturmayı (`synchronize: true`) aktif ettiği için ilk geliştirme aşamasında tablolarınız entity tanımlarından oluşturulur. Üretim ortamında migrate tabanlı yönetim tercih edilmelidir.
