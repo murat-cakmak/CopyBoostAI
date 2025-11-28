@@ -54,7 +54,7 @@ CopyBoost AI, e-ticaret satıcıları ve pazarlama ekipleri için ürün başlı
 1. `/generate` formu → `POST /content/generate`
 2. `UsageService` günlük/aylık limit kontrolü; aşıldıysa 402 Payment Required
 3. Prompt: başlık + kategori + dil + ton + platform
-4. OpenAI API çağrısı, yanıt parse edilip `contents` tablosuna kaydedilir, JSON response döner
+4. Gemini API çağrısı, yanıt parse edilip `contents` tablosuna kaydedilir, JSON response döner
 
 ### Abonelik / Stripe
 1. `/billing` → "Upgrade to Pro" → `POST /billing/create-checkout-session`
@@ -74,7 +74,7 @@ CopyBoost AI, e-ticaret satıcıları ve pazarlama ekipleri için ürün başlı
 - **Veritabanı:** PostgreSQL
 - **Auth:** JWT + Google OAuth
 - **Ödeme:** Stripe
-- **AI:** OpenAI API (veya muadili)
+- **AI:** Gemini API (veya muadili)
 
 ## Yol Haritası
 - **v1 (MVP):** Auth sistemi, ürün açıklama generator (tek dil), Free + Pro plan, Stripe entegrasyonu, basit dashboard
@@ -93,7 +93,8 @@ CopyBoost AI, e-ticaret satıcıları ve pazarlama ekipleri için ürün başlı
 3. Geliştirme sunucularını başlatın:
    - Frontend: `npm run dev` (varsayılan: http://localhost:3000)
    - Backend: `npm run start:dev` (varsayılan: http://localhost:3001/api)
-4. `.env` dosyalarına OpenAI, Stripe ve veritabanı bağlantı bilgilerinizi ekleyin. Auth/Billing/Content modülleri eklenirken bu değişkenler kullanılacaktır.
+4. `.env` dosyalarına Gemini, Stripe ve veritabanı bağlantı bilgilerinizi ekleyin. Auth/Billing/Content modülleri eklenirken bu değişkenler kullanılacaktır.
+   - Backend AI için minimum: `GEMINI_API_KEY=...`; opsiyonel: `GEMINI_MODEL=gemini-2.5-flash` veya `GEMINI_API_URL=...` (özel endpoint)
 
 ### Backend veritabanı ayarları
 `backend/.env` dosyasında PostgreSQL bağlantısı için aşağıdaki değişkenleri tanımlayın. Varsayılan değerler lokal PostgreSQL kuruluma uygundur ve ayarlanmadığında otomatik olarak kullanılır.
@@ -104,6 +105,9 @@ DB_PORT=5432
 DB_USER=postgres
 DB_PASS=postgres
 DB_NAME=copyboost
+GEMINI_API_KEY=...
+GEMINI_MODEL=gemini-2.5-flash
+# GEMINI_API_URL=https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=YOUR_KEY
 ```
 
 Backend, TypeORM ile otomatik şema oluşturmayı (`synchronize: true`) aktif ettiği için ilk geliştirme aşamasında tablolarınız entity tanımlarından oluşturulur. Üretim ortamında migrate tabanlı yönetim tercih edilmelidir.
