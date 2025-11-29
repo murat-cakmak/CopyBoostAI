@@ -44,7 +44,7 @@ export function NavBar() {
       <div className="container flex items-center justify-between py-4">
         <div className="flex items-center gap-2">
           <div className="h-10 w-10 rounded-lg bg-primary text-white grid place-items-center font-semibold">
-            {initials}
+            CB
           </div>
           <div>
             <p className="text-lg font-semibold">CopyBoost AI</p>
