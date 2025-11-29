@@ -3,12 +3,26 @@
 @tailwind utilities;
 
 :root {
+  --bg: #f8fafc;
+  --text: #0f172a;
+  --card: #ffffff;
+  --muted: #334155;
+  --border: #e2e8f0;
   color-scheme: light;
 }
 
+.dark {
+  --bg: #0b1220;
+  --text: #e2e8f0;
+  --card: #0f172a;
+  --muted: #94a3b8;
+  --border: #1f2937;
+  color-scheme: dark;
+}
+
 body {
-  background: #f8fafc;
-  color: #0f172a;
+  background: var(--bg);
+  color: var(--text);
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -20,4 +34,82 @@ a {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+.dark header,
+.dark footer {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .bg-white {
+  background-color: var(--card) !important;
+}
+
+.dark .bg-white\/80 {
+  background-color: rgba(17, 24, 39, 0.8) !important;
+}
+
+.dark .bg-slate-50 {
+  background-color: #0f172a !important;
+}
+
+.dark .bg-blue-50 {
+  background-color: #1e293b !important;
+  color: var(--text);
+}
+
+.dark .border {
+  border-color: var(--border) !important;
+}
+
+.dark a:hover,
+.dark button:hover {
+  color: #f8fafc !important;
+}
+
+.dark .hover\:bg-slate-50:hover {
+  background-color: #111827 !important;
+  color: #e2e8f0 !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: #1f2937 !important;
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-800,
+.dark .text-slate-700,
+.dark .text-slate-600 {
+  color: #f8fafc !important;
+}
+
+.dark .hover\:bg-slate-50:hover {
+  background-color: #111827 !important;
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-500 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-600 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-primary {
+  color: #519fb3 !important;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+  border-color: #1f2937 !important;
 }

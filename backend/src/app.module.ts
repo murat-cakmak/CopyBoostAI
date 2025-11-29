@@ -7,6 +7,8 @@ import { User } from './entities/user.entity';
 import { Subscription } from './entities/subscription.entity';
 import { Content } from './entities/content.entity';
 import { UsageLog } from './entities/usage-log.entity';
+import { GenerateRateLimitGuard } from './guards/generate-rate-limit.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 @Module({
   imports: [
@@ -27,6 +29,6 @@ import { UsageLog } from './entities/usage-log.entity';
     TypeOrmModule.forFeature([User, Subscription, Content, UsageLog]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GenerateRateLimitGuard, AdminGuard],
 })
 export class AppModule {}

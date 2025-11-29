@@ -1,5 +1,16 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AppService } from './app.service';
+import { GenerateRateLimitGuard } from './guards/generate-rate-limit.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 @Controller()
 export class AppController {
@@ -15,7 +26,69 @@ export class AppController {
     return this.appService.getWelcome();
   }
 
+  @Get('admin/users')
+  @UseGuards(AdminGuard)
+  getAllUsers() {
+    return this.appService.getAllUsers();
+  }
+
+  @Patch('admin/users/:id/daily-limit')
+  @UseGuards(AdminGuard)
+  setDailyLimit(
+    @Param('id') id: string,
+    @Body() body: { dailyRequestLimit: number },
+  ) {
+    return this.appService.setUserDailyLimit(id, body.dailyRequestLimit);
+  }
+
+  @Post('admin/users/:id/subscription')
+  @UseGuards(AdminGuard)
+  createSubscription(@Param('id') id: string) {
+    return this.appService.createSubscriptionForUser(id);
+  }
+
+  @Post('admin/users/:id/subscription/cancel')
+  @UseGuards(AdminGuard)
+  cancelSubscription(@Param('id') id: string) {
+    return this.appService.cancelSubscriptionForUser(id);
+  }
+
+  @Get('admin/subscriptions')
+  @UseGuards(AdminGuard)
+  getAllSubscriptions() {
+    return this.appService.getAllSubscriptions();
+  }
+
+  @Post('auth/register')
+  register(
+    @Body()
+    body: {
+      email: string;
+      password: string;
+      name?: string;
+    },
+  ) {
+    return this.appService.register(body);
+  }
+
+  @Post('auth/login')
+  login(
+    @Body()
+    body: {
+      email: string;
+      password: string;
+    },
+  ) {
+    return this.appService.login(body);
+  }
+
+  @Get('auth/me')
+  me(@Headers('x-user-id') userId?: string) {
+    return this.appService.getProfile(userId);
+  }
+
   @Post('content/generate')
+  @UseGuards(GenerateRateLimitGuard)
   generateContent(
     @Body()
     body: {
@@ -25,7 +98,13 @@ export class AppController {
       language?: string;
       tone?: string;
     },
+    @Headers('x-user-id') userId?: string,
   ) {
-    return this.appService.generateContent(body);
+    return this.appService.generateContent(body, userId);
+  }
+
+  @Get('content')
+  getUserContents(@Headers('x-user-id') userId?: string) {
+    return this.appService.getUserContents(userId);
   }
 }

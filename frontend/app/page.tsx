@@ -1,30 +1,94 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { getStoredUser, type AuthUser } from "@/lib/auth";
+
+type Profile = {
+  user: AuthUser;
+  plan: string;
+  limits?: {
+    dailyLimit: number | null;
+    dailyUsed: number;
+    dailyRemaining: number | null;
+    monthlyUsage: number;
+    daysRemaining: number | null;
+  };
+};
+
 const features = [
   {
-    title: "SEO uyumlu açıklamalar",
-    description: "Ürün başlığı ve temel bilgilerden uzun/kısa açıklamalar üretin."
+    title: "Saniyeler içinde hazır açıklama",
+    description: "Ürün başlığından, platforma uygun uzun ve kısa açıklamaları saniyede alın."
   },
   {
-    title: "Platform preset’leri",
-    description: "Amazon, Trendyol, Shopify gibi pazaryerleri için hazır şablonlar."
+    title: "Pazaryeri uyumu",
+    description: "Trendyol, Hepsiburada, Amazon, Shopify için otomatik format ve dil tonları."
   },
   {
-    title: "Kullanım limitleri",
-    description: "Free plan için günlük 5 üretim, Pro plan için sınırsız oluşturma hakkı."
+    title: "Sabit kalite, sabit hız",
+    description: "Her üründe tutarlı SEO odaklı içerik ve hızlı teslimat."
   },
   {
-    title: "Abonelik takibi",
-    description: "Stripe ile ödeme, plan yükseltme ve müşteri portalı entegrasyonu."
+    title: "Ekstra zaman kazancı",
+    description: "Manuel içerik yazımına harcadığınız süreyi operasyon ve satışa ayırın."
   }
 ];
 
 export default function HomePage() {
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+
+  useEffect(() => {
+    const loadProfile = async (userId: string) => {
+      setLoadingProfile(true);
+      try {
+        const res = await fetch(`${apiBase}/auth/me`, {
+          headers: { "x-user-id": userId },
+        });
+        const body = await res.json().catch(() => null);
+        if (res.ok && body) {
+          setProfile(body as Profile);
+        } else {
+          setProfile(null);
+        }
+      } catch (error) {
+        setProfile(null);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+
+    const sync = () => {
+      const u = getStoredUser();
+      setUser(u);
+      if (u?.id) {
+        loadProfile(u.id as string);
+      } else {
+        setProfile(null);
+      }
+    };
+
+    sync();
+    window.addEventListener("copyboost-auth-changed", sync);
+    return () => window.removeEventListener("copyboost-auth-changed", sync);
+  }, [apiBase]);
+
+  const planLabel = profile?.plan && profile.plan !== "free" ? profile.plan.toUpperCase() : null;
+  const dailyLimit =
+    profile?.limits?.dailyLimit !== null && profile?.limits?.dailyLimit !== undefined
+      ? profile.limits.dailyLimit
+      : null;
+  const dailyRemaining =
+    profile?.limits?.dailyRemaining !== null && profile?.limits?.dailyRemaining !== undefined
+      ? profile.limits.dailyRemaining
+      : null;
+
   return (
     <div className="container py-12 space-y-12">
       <section className="grid gap-6 lg:grid-cols-2 items-center">
-        <div className="space-y-4">
-          <p className="inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-            Mikro SaaS • GPT destekli
-          </p>
+        <div className="space-y-4 p-6 shadow-sm">
           <h1 className="text-4xl font-bold text-primary">
             CopyBoost AI ile ürün açıklamalarınızı dakikalar değil saniyeler içinde hazırlayın
           </h1>
@@ -32,12 +96,61 @@ export default function HomePage() {
             Trendyol, Hepsiburada, Amazon ve Shopify satıcıları için özel tasarlanmış SEO uyumlu
             açıklamalar, meta başlıklar ve etiket önerileri. Abonelik modeliyle güvenle ölçekleyin.
           </p>
+          <div className="rounded-xl border bg-white p-4 shadow-sm">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase text-slate-400">Plan</p>
+                <p className="text-lg font-semibold text-primary">
+                  {planLabel ? planLabel : "FREE"}
+                </p>
+                <p className="text-sm text-slate-500">
+                  Günlük hak:{" "}
+                  {loadingProfile
+                    ? "Yükleniyor..."
+                    : dailyLimit !== null
+                      ? dailyLimit
+                      : "5"}
+                </p>
+              </div>
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                {loadingProfile
+                  ? "Güncelleniyor"
+                  : dailyRemaining !== null
+                    ? `Bugün kalan ${dailyRemaining}`
+                    : "Bugün kalan 5"}
+              </span>
+            </div>
+            <div className="mt-3 grid gap-3 text-sm text-slate-600 sm:grid-cols-3">
+              <div className="rounded-lg bg-slate-50 p-3">
+                <p className="text-xs uppercase text-slate-400">Bugün kullanılan</p>
+                <p className="font-semibold text-primary">
+                  {profile?.limits ? profile.limits.dailyUsed : loadingProfile ? "—" : "0"}
+                </p>
+              </div>
+              <div className="rounded-lg bg-slate-50 p-3">
+                <p className="text-xs uppercase text-slate-400">Bu ay</p>
+                <p className="font-semibold text-primary">
+                  {profile?.limits ? profile.limits.monthlyUsage : loadingProfile ? "—" : "0"}
+                </p>
+              </div>
+              <div className="rounded-lg bg-slate-50 p-3">
+                <p className="text-xs uppercase text-slate-400">Dönem kalan</p>
+                <p className="font-semibold text-primary">
+                  {profile?.limits?.daysRemaining !== null && profile?.limits?.daysRemaining !== undefined
+                    ? `${profile.limits.daysRemaining} gün`
+                    : loadingProfile
+                      ? "—"
+                      : "Belirtilmedi"}
+                </p>
+              </div>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-3">
             <a
-              href="/auth/register"
+              href={user ? "/generate" : "/auth/register"}
               className="rounded-lg bg-primary px-4 py-2 text-white font-semibold hover:bg-slate-800"
             >
-              Hemen ücretsiz deneyin
+              {user ? "İçerik üretmeye devam et" : "Hemen ücretsiz deneyin"}
             </a>
             <a
               href="/generate"
@@ -45,16 +158,6 @@ export default function HomePage() {
             >
               İçerik üret
             </a>
-          </div>
-          <div className="flex gap-6 text-sm text-slate-500">
-            <div>
-              <p className="font-semibold text-primary">Free plan</p>
-              <p>Günde 5 içerik üretimi</p>
-            </div>
-            <div>
-              <p className="font-semibold text-primary">Pro plan</p>
-              <p>Sınırsız üretim + Google OAuth</p>
-            </div>
           </div>
         </div>
         <div className="rounded-2xl border border-dashed border-blue-200 bg-white p-6 shadow-sm">
@@ -93,14 +196,6 @@ export default function HomePage() {
       </section>
 
       <section className="space-y-6">
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-semibold text-blue-600">Özellikler</p>
-          <h2 className="text-3xl font-bold text-primary">MVP yol haritasına hazır altyapı</h2>
-          <p className="text-slate-600">
-            Frontend, NestJS API ve Stripe entegrasyonu için başlangıç katmanları hazır. Dashboard ve
-            generate akışı için sayfa iskeletleri eklendi.
-          </p>
-        </div>
         <div className="grid gap-4 md:grid-cols-2">
           {features.map((feature) => (
             <div key={feature.title} className="rounded-xl border bg-white p-5 shadow-sm">

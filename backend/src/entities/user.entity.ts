@@ -17,6 +17,9 @@ export class User {
   @Column({ nullable: true })
   name?: string | null;
 
+  @Column({ name: 'daily_request_limit', type: 'int', nullable: true })
+  dailyRequestLimit?: number | null;
+
   @Column({ default: 'user' })
   role: 'user' | 'admin';
 

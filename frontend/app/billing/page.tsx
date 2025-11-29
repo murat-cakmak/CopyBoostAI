@@ -2,8 +2,7 @@ export default function BillingPage() {
   return (
     <div className="container py-10 space-y-6">
       <div className="max-w-2xl space-y-2">
-        <p className="text-sm font-semibold text-blue-600">Ödeme & planlar</p>
-        <h1 className="text-3xl font-bold text-primary">Aboneliklerinizi yönetin</h1>
+        <h1 className="text-3xl font-bold text-primary mt-5">Aboneliklerinizi yönetin</h1>
         <p className="text-slate-600">
           Stripe Checkout ve müşteri portalı entegrasyonu için placeholder. Plan değişiklikleri ve ödeme
           geçmişi burada listelenecek.

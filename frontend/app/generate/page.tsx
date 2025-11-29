@@ -2,6 +2,15 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { addGenerationToHistory, DAILY_LIMIT, getHistory } from "@/lib/history";
+import { getStoredUser } from "@/lib/auth";
+
+type Profile = {
+  limits?: {
+    dailyLimit: number | null;
+    dailyUsed: number;
+    dailyRemaining: number | null;
+  };
+};
 
 export default function GeneratePage() {
   const [form, setForm] = useState({
@@ -14,6 +23,21 @@ export default function GeneratePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dailyCount, setDailyCount] = useState(0);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [savedContents, setSavedContents] = useState<
+    Array<{
+      id: string;
+      input: { title?: string; category?: string; platform?: string; language?: string; tone?: string };
+      output: {
+        longDescription?: string | null;
+        shortDescription?: string | null;
+        seo?: { title?: string | null; description?: string | null };
+        tags?: string[];
+      };
+      createdAt: string;
+    }>
+  >([]);
   const [result, setResult] = useState<null | {
     output?: {
       longDescription?: string;
@@ -26,7 +50,16 @@ export default function GeneratePage() {
 
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
 
-  const limitReached = dailyCount >= DAILY_LIMIT;
+  const effectiveDailyLimit =
+    profile?.limits?.dailyLimit !== null && profile?.limits?.dailyLimit !== undefined
+      ? profile.limits.dailyLimit
+      : DAILY_LIMIT;
+  const serverRemaining =
+    profile?.limits?.dailyRemaining !== null && profile?.limits?.dailyRemaining !== undefined
+      ? profile.limits.dailyRemaining
+      : null;
+  const serverLimitReached = serverRemaining !== null && serverRemaining <= 0;
+  const limitReached = serverLimitReached || dailyCount >= effectiveDailyLimit;
 
   const syncDailyCount = () => {
     const today = new Date().toDateString();
@@ -47,11 +80,63 @@ export default function GeneratePage() {
     };
   }, []);
 
+  useEffect(() => {
+    const authUser = getStoredUser();
+    if (!authUser?.id) {
+      setProfile(null);
+      setSavedContents([]);
+      return;
+    }
+
+    const fetchProfile = async () => {
+      setLoadingProfile(true);
+      try {
+        const res = await fetch(`${apiBase}/auth/me`, {
+          headers: { "x-user-id": authUser.id as string },
+        });
+        const body = await res.json().catch(() => null);
+        if (res.ok && body) {
+          setProfile(body as Profile);
+        } else {
+          setProfile(null);
+        }
+      } catch (error) {
+        setProfile(null);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+
+    const fetchContents = async () => {
+      try {
+        const res = await fetch(`${apiBase}/content`, {
+          headers: { "x-user-id": authUser.id as string },
+        });
+        const body = await res.json().catch(() => []);
+        if (res.ok && Array.isArray(body)) {
+          setSavedContents(body);
+          if (body.length > 0) {
+            setResult(body[0]);
+          }
+        }
+      } catch (error) {
+        // ignore
+      }
+    };
+
+    fetchProfile();
+    fetchContents();
+  }, [apiBase]);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (limitReached) {
-      setError(`Günlük ${DAILY_LIMIT} üretim hakkınız doldu. Yarın tekrar deneyin.`);
+      const message =
+        serverLimitReached && serverRemaining !== null
+          ? `Günlük hakkınız doldu. Kalan: 0 / ${effectiveDailyLimit}`
+          : `Günlük ${effectiveDailyLimit} üretim hakkınız doldu. Yarın tekrar deneyin.`;
+      setError(message);
       return;
     }
 
@@ -60,15 +145,30 @@ export default function GeneratePage() {
     setResult(null);
 
     try {
+      const authUser = getStoredUser();
       const res = await fetch(`${apiBase}/content/generate`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(authUser?.id ? { "x-user-id": authUser.id } : {}),
+        },
         body: JSON.stringify(form),
       });
 
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `API ${res.status} hatası`);
+        let message = `API ${res.status} hatası`;
+        try {
+          const errorBody = await res.json();
+          if (typeof errorBody?.message === "string") {
+            message = errorBody.message;
+          } else if (Array.isArray(errorBody?.message)) {
+            message = errorBody.message.join(", ");
+          }
+        } catch {
+          const text = await res.text();
+          if (text) message = text;
+        }
+        throw new Error(message);
       }
 
       const data = await res.json();
@@ -92,6 +192,21 @@ export default function GeneratePage() {
       });
 
       setDailyCount((prev) => prev + 1);
+
+      // Refresh saved contents for logged-in users so UI reads from DB
+      if (authUser?.id) {
+        try {
+          const resList = await fetch(`${apiBase}/content`, {
+            headers: { "x-user-id": authUser.id as string },
+          });
+          const body = await resList.json().catch(() => []);
+          if (resList.ok && Array.isArray(body)) {
+            setSavedContents(body);
+          }
+        } catch (err) {
+          // ignore best-effort
+        }
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Bilinmeyen hata";
       setError(message);
@@ -103,15 +218,14 @@ export default function GeneratePage() {
   return (
     <div className="container py-10 space-y-6">
       <div className="max-w-3xl space-y-2">
-        <p className="text-sm font-semibold text-blue-600">İçerik üretimi</p>
-        <h1 className="text-3xl font-bold text-primary">Ürün detaylarını girin ve AI çıktısını alın</h1>
+        <h1 className="text-3xl font-bold text-primary mt-5">Ürün detaylarını girin ve AI çıktısını alın</h1>
         <p className="text-slate-600">
           Form alanları ve prompt varyasyonları için temel iskelet. Backend API bağlandığında gerçek zamanlı
           yanıtları gösterecek.
         </p>
         {limitReached && (
           <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            Günlük {DAILY_LIMIT} üretim hakkınız doldu. Yarın tekrar deneyebilir veya plan yükseltebilirsiniz.
+            Günlük {effectiveDailyLimit} üretim hakkınız doldu. Yarın tekrar deneyebilir veya plan yükseltebilirsiniz.
           </div>
         )}
       </div>
@@ -198,13 +312,18 @@ export default function GeneratePage() {
           <button
             type="submit"
             className="w-full rounded-lg bg-primary px-4 py-2 text-white font-semibold hover:bg-slate-800 disabled:opacity-60"
-            disabled={loading || limitReached}
+            disabled={loading || limitReached || loadingProfile}
           >
-            {loading ? "Üretiliyor..." : "Generate"}
+            {loading
+              ? "Üretiliyor..."
+              : loadingProfile
+                ? "Limit kontrol ediliyor..."
+                : "Generate"}
           </button>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <p className="text-xs text-slate-500">
-            Bugünkü kullanım: {dailyCount} / {DAILY_LIMIT}
+            Bugünkü kullanım: {dailyCount} / {effectiveDailyLimit}{" "}
+            {serverRemaining !== null ? `(sunucu kalan: ${Math.max(serverRemaining, 0)})` : ""}
           </p>
         </form>
         <div className="space-y-4 rounded-xl border bg-white p-6 shadow-sm">
