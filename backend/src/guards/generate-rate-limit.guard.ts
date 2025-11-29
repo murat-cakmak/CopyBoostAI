@@ -6,6 +6,10 @@ import {
   Injectable,
 } from "@nestjs/common";
 import { Request, Response } from "express";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Between, Repository } from "typeorm";
+import { User } from "../entities/user.entity";
+import { UsageLog } from "../entities/usage-log.entity";
 
 type HitInfo = {
   count: number;
@@ -14,39 +18,81 @@ type HitInfo = {
 
 @Injectable()
 export class GenerateRateLimitGuard implements CanActivate {
-  private readonly limit =
+  constructor(
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(UsageLog)
+    private readonly usageLogsRepository: Repository<UsageLog>
+  ) {}
+
+  private readonly defaultLimit =
     Number.parseInt(process.env.GENERATE_DAILY_LIMIT ?? "", 10) || 5;
-  private readonly windowMs =
-    Number.parseInt(process.env.GENERATE_WINDOW_SECONDS ?? "", 10) * 1000 ||
-    24 * 60 * 60 * 1000;
+
   private readonly hits = new Map<string, HitInfo>();
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
     const key = this.extractClientKey(request);
+    const userId = this.extractUserId(request);
     const now = Date.now();
 
-    const existing = this.hits.get(key);
+    const effectiveKey = userId || key;
+    const existing = this.hits.get(effectiveKey);
+    const resetAt =
+      existing && existing.resetAt > now ? existing.resetAt : this.getResetTimestamp();
+    const inMemoryCount =
+      existing && existing.resetAt > now ? existing.count : 0;
 
-    if (!existing || existing.resetAt <= now) {
-      this.hits.set(key, { count: 1, resetAt: now + this.windowMs });
-      return true;
-    }
+    const limit = await this.resolveLimit(userId);
+    const usageToday = userId
+      ? await this.countUsageToday(userId)
+      : 0;
+    const totalUsage = usageToday + inMemoryCount;
 
-    if (existing.count >= this.limit) {
-      const retryAfterSeconds = Math.max(
-        1,
-        Math.ceil((existing.resetAt - now) / 1000),
-      );
+    if (totalUsage >= limit) {
+      const retryAfterSeconds = Math.max(1, Math.ceil((resetAt - now) / 1000));
       response.setHeader("Retry-After", retryAfterSeconds.toString());
       const hours = Math.max(1, Math.ceil(retryAfterSeconds / 3600));
       const message = `Günlük üretim limitine ulaşıldı. ${hours} saat sonra tekrar deneyin.`;
       throw new HttpException(message, HttpStatus.TOO_MANY_REQUESTS);
     }
 
-    existing.count += 1;
+    this.hits.set(effectiveKey, {
+      count: inMemoryCount + 1,
+      resetAt,
+    });
     return true;
+  }
+
+  private async resolveLimit(userId?: string | null): Promise<number> {
+    if (!userId) return this.defaultLimit;
+
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) return this.defaultLimit;
+
+    const limit = user.dailyRequestLimit ?? this.defaultLimit;
+    return limit > 0 ? limit : this.defaultLimit;
+  }
+
+  private async countUsageToday(userId: string): Promise<number> {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+
+    return this.usageLogsRepository.count({
+      where: {
+        user: { id: userId },
+        requestType: "generate",
+        createdAt: Between(start, end),
+      },
+    });
+  }
+
+  private getResetTimestamp(): number {
+    const tomorrow = new Date();
+    tomorrow.setHours(24, 0, 0, 0);
+    return tomorrow.getTime();
   }
 
   private extractClientKey(req: Request): string {
@@ -61,5 +107,16 @@ export class GenerateRateLimitGuard implements CanActivate {
     }
 
     return req.ip || req.socket.remoteAddress || "unknown";
+  }
+
+  private extractUserId(req: Request): string | null {
+    const header = req.headers["x-user-id"];
+    if (typeof header === "string" && header.trim().length > 0) {
+      return header.trim();
+    }
+    if (Array.isArray(header) && header.length > 0) {
+      return header[0];
+    }
+    return null;
   }
 }
