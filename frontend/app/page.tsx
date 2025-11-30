@@ -116,7 +116,7 @@ export default function HomePage() {
     <div className="container py-12 space-y-12">
       <section className="grid gap-6 lg:grid-cols-2 items-center">
         <div className="space-y-4 p-6 shadow-sm">
-          <h1 className="text-4xl font-bold text-primary">
+          <h1 className="text-2xl font-bold text-primary">
             CopyBoost AI ile ürün açıklamalarınızı dakikalar değil saniyeler içinde hazırlayın
           </h1>
           <p className="text-lg text-slate-600">
@@ -177,7 +177,7 @@ export default function HomePage() {
             </a>
             <a
               href="/generate"
-              className="rounded-lg border border-primary px-4 py-2 font-semibold text-primary hover:bg-slate-50"
+              className="rounded-lg border border-primary px-4 py-2 font-semibold text-primary hover:bg-slate-50 shadow-2xl"
             >
               İçerik üret
             </a>

@@ -40,12 +40,15 @@ export function NavBar() {
       .slice(0, 2) || "CB";
 
   return (
-    <header className="border-b bg-white/80 backdrop-blur">
+    <header className="border-b bg-white/80 backdrop-blur py-5">
       <div className="container flex items-center justify-between py-4">
         <div className="flex items-center gap-2">
-          <div className="h-10 w-10 rounded-lg bg-primary text-white grid place-items-center font-semibold">
-            CB
-          </div>
+          <a href="/" className="hover:text-primary">
+            <div className="h-12 w-12 rounded-lg bg-primary text-white grid place-items-center font-semibold">
+              CB
+            </div>
+          </a>
+          
           <div>
             <p className="text-lg font-semibold">CopyBoost AI</p>
             <p className="text-sm text-slate-500">E-ticaret için üretken içerik</p>
