@@ -13,7 +13,7 @@ type Profile = {
 };
 
 export default function GeneratePage() {
-  const selectZoneRef = useRef<HTMLDivElement | null>(null);
+  const selectZoneRef = useRef<HTMLFormElement | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: "",
