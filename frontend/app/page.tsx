@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getStoredUser, type AuthUser } from "@/lib/auth";
+import { DAILY_LIMIT, getHistory } from "@/lib/history";
 
 type Profile = {
   user: AuthUser;
@@ -39,8 +40,25 @@ export default function HomePage() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
+  const [localUsage, setLocalUsage] = useState({ today: 0, month: 0 });
 
   useEffect(() => {
+    const syncLocalUsage = () => {
+      const now = new Date();
+      const todayKey = now.toDateString();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      const items = getHistory();
+
+      const today = items.filter(
+        (item) => new Date(item.createdAt).toDateString() === todayKey
+      ).length;
+      const month = items.filter(
+        (item) => new Date(item.createdAt).getTime() >= monthStart
+      ).length;
+
+      setLocalUsage({ today, month });
+    };
+
     const loadProfile = async (userId: string) => {
       setLoadingProfile(true);
       try {
@@ -68,22 +86,31 @@ export default function HomePage() {
       } else {
         setProfile(null);
       }
+      syncLocalUsage();
     };
 
     sync();
     window.addEventListener("copyboost-auth-changed", sync);
-    return () => window.removeEventListener("copyboost-auth-changed", sync);
+    window.addEventListener("copyboost-history-updated", syncLocalUsage);
+    window.addEventListener("storage", syncLocalUsage);
+    return () => {
+      window.removeEventListener("copyboost-auth-changed", sync);
+      window.removeEventListener("copyboost-history-updated", syncLocalUsage);
+      window.removeEventListener("storage", syncLocalUsage);
+    };
   }, [apiBase]);
 
   const planLabel = profile?.plan && profile.plan !== "free" ? profile.plan.toUpperCase() : null;
   const dailyLimit =
     profile?.limits?.dailyLimit !== null && profile?.limits?.dailyLimit !== undefined
       ? profile.limits.dailyLimit
-      : null;
+      : DAILY_LIMIT;
   const dailyRemaining =
     profile?.limits?.dailyRemaining !== null && profile?.limits?.dailyRemaining !== undefined
       ? profile.limits.dailyRemaining
-      : null;
+      : Math.max(dailyLimit - localUsage.today, 0);
+  const dailyUsed = profile?.limits ? profile.limits.dailyUsed : localUsage.today;
+  const monthlyUsage = profile?.limits ? profile.limits.monthlyUsage : localUsage.month;
 
   return (
     <div className="container py-12 space-y-12">
@@ -123,15 +150,11 @@ export default function HomePage() {
             <div className="mt-3 grid gap-3 text-sm text-slate-600 sm:grid-cols-3">
               <div className="rounded-lg bg-slate-50 p-3">
                 <p className="text-xs uppercase text-slate-400">Bugün kullanılan</p>
-                <p className="font-semibold text-primary">
-                  {profile?.limits ? profile.limits.dailyUsed : loadingProfile ? "—" : "0"}
-                </p>
+                <p className="font-semibold text-primary">{loadingProfile ? "—" : dailyUsed}</p>
               </div>
               <div className="rounded-lg bg-slate-50 p-3">
                 <p className="text-xs uppercase text-slate-400">Bu ay</p>
-                <p className="font-semibold text-primary">
-                  {profile?.limits ? profile.limits.monthlyUsage : loadingProfile ? "—" : "0"}
-                </p>
+                <p className="font-semibold text-primary">{loadingProfile ? "—" : monthlyUsage}</p>
               </div>
               <div className="rounded-lg bg-slate-50 p-3">
                 <p className="text-xs uppercase text-slate-400">Dönem kalan</p>

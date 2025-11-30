@@ -38,16 +38,13 @@ export class GenerateRateLimitGuard implements CanActivate {
 
     const effectiveKey = userId || key;
     const existing = this.hits.get(effectiveKey);
-    const resetAt =
-      existing && existing.resetAt > now ? existing.resetAt : this.getResetTimestamp();
-    const inMemoryCount =
-      existing && existing.resetAt > now ? existing.count : 0;
+    const hasValidHits = !!existing && existing.resetAt > now;
+    const resetAt = hasValidHits ? existing.resetAt : this.getResetTimestamp();
+    const inMemoryHits = hasValidHits ? existing.count : 0;
 
     const limit = await this.resolveLimit(userId);
-    const usageToday = userId
-      ? await this.countUsageToday(userId)
-      : 0;
-    const totalUsage = usageToday + inMemoryCount;
+    const usageToday = userId ? await this.countUsageToday(userId) : 0;
+    const totalUsage = userId ? usageToday + inMemoryHits : inMemoryHits;
 
     if (totalUsage >= limit) {
       const retryAfterSeconds = Math.max(1, Math.ceil((resetAt - now) / 1000));
@@ -57,8 +54,10 @@ export class GenerateRateLimitGuard implements CanActivate {
       throw new HttpException(message, HttpStatus.TOO_MANY_REQUESTS);
     }
 
+    const newCount = inMemoryHits + 1;
+
     this.hits.set(effectiveKey, {
-      count: inMemoryCount + 1,
+      count: newCount,
       resetAt,
     });
     return true;
