@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { addGenerationToHistory, DAILY_LIMIT, getHistory } from "@/lib/history";
 import { getStoredUser } from "@/lib/auth";
 
@@ -13,6 +13,8 @@ type Profile = {
 };
 
 export default function GeneratePage() {
+  const selectZoneRef = useRef<HTMLDivElement | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: "",
     category: "giyim",
@@ -73,10 +75,24 @@ export default function GeneratePage() {
     const handleUpdate = () => syncDailyCount();
     window.addEventListener("copyboost-history-updated", handleUpdate);
     window.addEventListener("storage", handleUpdate);
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setOpenDropdown(null);
+      }
+    };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (selectZoneRef.current && !selectZoneRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       window.removeEventListener("copyboost-history-updated", handleUpdate);
       window.removeEventListener("storage", handleUpdate);
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -215,6 +231,80 @@ export default function GeneratePage() {
     }
   };
 
+  const renderSelectField = (
+    id: "category" | "platform" | "language" | "tone",
+    label: string,
+    value: string,
+    options: Array<{ value: string; label: string }>
+  ) => {
+    const selectedLabel = options.find((opt) => opt.value === value)?.label || value;
+
+    return (
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-slate-700" htmlFor={id}>
+          {label}
+        </label>
+        <div className="md:hidden">
+          <div className="relative">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-slate-700 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+              onClick={() => setOpenDropdown((prev) => (prev === id ? null : id))}
+            >
+              <span>{selectedLabel}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`h-4 w-4 text-slate-500 transition-transform ${openDropdown === id ? "rotate-180" : ""}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {openDropdown === id && (
+              <div className="absolute left-0 right-0 z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border bg-white shadow-lg">
+                {options.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={`flex w-full items-center justify-between px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 ${
+                      value === opt.value ? "font-semibold text-primary" : ""
+                    }`}
+                    onClick={() => {
+                      setForm((prev) => ({ ...prev, [id]: opt.value }));
+                      setOpenDropdown(null);
+                    }}
+                  >
+                    <span>{opt.label}</span>
+                    {value === opt.value && (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <select
+          id={id}
+          className="hidden w-full rounded-lg border px-3 py-2 outline-none focus:border-primary md:block"
+          value={value}
+          onChange={(e) => setForm((prev) => ({ ...prev, [id]: e.target.value }))}
+        >
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  };
+
   return (
     <div className="container py-10 space-y-6">
       <div className="max-w-3xl space-y-2">
@@ -230,7 +320,7 @@ export default function GeneratePage() {
         )}
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border bg-white p-6 shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border bg-white p-6 shadow-sm" ref={selectZoneRef}>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700" htmlFor="title">
               Ürün başlığı
@@ -245,69 +335,29 @@ export default function GeneratePage() {
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700" htmlFor="category">
-                Kategori
-              </label>
-              <select
-                id="category"
-                className="w-full rounded-lg border px-3 py-2 outline-none focus:border-primary"
-                value={form.category}
-                onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value }))}
-              >
-                <option value="giyim">Giyim</option>
-                <option value="elektronik">Elektronik</option>
-                <option value="kozmetik">Kozmetik</option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700" htmlFor="platform">
-                Platform
-              </label>
-              <select
-                id="platform"
-                className="w-full rounded-lg border px-3 py-2 outline-none focus:border-primary"
-                value={form.platform}
-                onChange={(e) => setForm((prev) => ({ ...prev, platform: e.target.value }))}
-              >
-                <option value="trendyol">Trendyol</option>
-                <option value="hepsiburada">Hepsiburada</option>
-                <option value="amazon">Amazon</option>
-                <option value="shopify">Shopify</option>
-              </select>
-            </div>
+            {renderSelectField("category", "Kategori", form.category, [
+              { value: "giyim", label: "Giyim" },
+              { value: "elektronik", label: "Elektronik" },
+              { value: "kozmetik", label: "Kozmetik" },
+            ])}
+            {renderSelectField("platform", "Platform", form.platform, [
+              { value: "trendyol", label: "Trendyol" },
+              { value: "hepsiburada", label: "Hepsiburada" },
+              { value: "amazon", label: "Amazon" },
+              { value: "shopify", label: "Shopify" },
+            ])}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700" htmlFor="language">
-                Hedef dil
-              </label>
-              <select
-                id="language"
-                className="w-full rounded-lg border px-3 py-2 outline-none focus:border-primary"
-                value={form.language}
-                onChange={(e) => setForm((prev) => ({ ...prev, language: e.target.value }))}
-              >
-                <option value="tr">Türkçe</option>
-                <option value="en">İngilizce</option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700" htmlFor="tone">
-                Ton
-              </label>
-              <select
-                id="tone"
-                className="w-full rounded-lg border px-3 py-2 outline-none focus:border-primary"
-                value={form.tone}
-                onChange={(e) => setForm((prev) => ({ ...prev, tone: e.target.value }))}
-              >
-                <option value="resmi">Resmi</option>
-                <option value="samimi">Samimi</option>
-                <option value="eglenceli">Eğlenceli</option>
-                <option value="teknik">Teknik</option>
-              </select>
-            </div>
+            {renderSelectField("language", "Hedef dil", form.language, [
+              { value: "tr", label: "Türkçe" },
+              { value: "en", label: "İngilizce" },
+            ])}
+            {renderSelectField("tone", "Ton", form.tone, [
+              { value: "resmi", label: "Resmi" },
+              { value: "samimi", label: "Samimi" },
+              { value: "eglenceli", label: "Eğlenceli" },
+              { value: "teknik", label: "Teknik" },
+            ])}
           </div>
           <button
             type="submit"

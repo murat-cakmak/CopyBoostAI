@@ -241,7 +241,9 @@ export default function DashboardPage() {
                     <p className="text-xs text-slate-500">
                       {item.input.platform} • {item.input.language.toUpperCase()} • {item.input.tone}
                     </p>
-                    <p className="text-slate-600 w-[500px]">{preview}</p>
+                    <p className="text-slate-600 w-full break-words md:w-[500px]">
+                      {preview}
+                    </p>
                   </div>
                   <div className="flex flex-col items-start gap-2 text-right text-xs text-slate-500 md:items-end">
                     <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600">
@@ -266,11 +268,11 @@ export default function DashboardPage() {
 
       {selected && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 py-6 sm:items-center"
           onClick={() => setSelected(null)}
         >
           <div
-            className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl"
+            className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4">

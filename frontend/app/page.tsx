@@ -114,8 +114,8 @@ export default function HomePage() {
 
   return (
     <div className="container py-12 space-y-12">
-      <section className="grid gap-6 lg:grid-cols-2 items-center">
-        <div className="space-y-4 p-6 shadow-sm">
+      <section className="grid gap-6 lg:grid-cols-2 items-center space-y-6">
+        <div className="space-y-4 lg:p-6 shadow-sm">
           <h1 className="text-2xl font-bold text-primary">
             CopyBoost AI ile ürün açıklamalarınızı dakikalar değil saniyeler içinde hazırlayın
           </h1>
