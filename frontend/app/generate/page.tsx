@@ -14,7 +14,9 @@ type Profile = {
 
 export default function GeneratePage() {
   const selectZoneRef = useRef<HTMLFormElement | null>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const TITLE_MAX_LENGTH = 120;
   const [form, setForm] = useState({
     title: "",
     category: "giyim",
@@ -24,6 +26,8 @@ export default function GeneratePage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [titleError, setTitleError] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [dailyCount, setDailyCount] = useState(0);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
@@ -144,8 +148,65 @@ export default function GeneratePage() {
     fetchContents();
   }, [apiBase]);
 
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
+
+  const sanitizeTitleInput = (value: string) => value.replace(/[<>]/g, "").slice(0, TITLE_MAX_LENGTH);
+
+  const handleTitleChange = (value: string) => {
+    const sanitized = sanitizeTitleInput(value);
+    const cleaned = sanitized.replace(/javascript\s*:/gi, "");
+    if (sanitized !== cleaned) {
+      setTitleError("Ürün başlığında JavaScript kodu kullanamazsınız.");
+    } else {
+      setTitleError(null);
+    }
+    setForm((prev) => ({ ...prev, title: cleaned }));
+  };
+
+  const handleCopy = async (key: string, value?: string | null) => {
+    const text = (value || "").toString().trim();
+    if (!text) return;
+
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        setCopiedKey(key);
+        copyTimeoutRef.current = setTimeout(() => setCopiedKey(null), 1500);
+      } else {
+        throw new Error("Clipboard desteklenmiyor");
+      }
+    } catch (err) {
+      setError((prev) => prev || "Kopyalama başarısız oldu.");
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const cleanedTitle = sanitizeTitleInput(form.title);
+    const hasJsPayload = /javascript\s*:/i.test(cleanedTitle);
+    if (!cleanedTitle.trim()) {
+      setError("Lütfen geçerli bir ürün başlığı girin.");
+      setForm((prev) => ({ ...prev, title: "" }));
+      return;
+    }
+    if (hasJsPayload) {
+      setError("Ürün başlığında JavaScript kodu kullanamazsınız.");
+      setForm((prev) => ({ ...prev, title: cleanedTitle.replace(/javascript\s*:/gi, "") }));
+      return;
+    }
+    if (cleanedTitle !== form.title) {
+      setForm((prev) => ({ ...prev, title: cleanedTitle }));
+    }
+    if (titleError) {
+      setError(titleError);
+      return;
+    }
 
     if (limitReached) {
       const message =
@@ -305,6 +366,28 @@ export default function GeneratePage() {
     );
   };
 
+  const CopyButton = ({ copyKey, value }: { copyKey: string; value?: string | null }) => (
+    <button
+      type="button"
+      onClick={() => handleCopy(copyKey, value)}
+      disabled={!value || !value.toString().trim()}
+      className="flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+      title={copiedKey === copyKey ? "Kopyalandı" : "Sonucu kopyala"}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </svg>
+      <span>{copiedKey === copyKey ? "Kopyalandı" : "Kopyala"}</span>
+    </button>
+  );
+
+  const seoTitleText = result?.output?.seo?.title || "Meta title";
+  const seoDescriptionText = result?.output?.seo?.description || "Meta description placeholder.";
+  const seoCopyText = [result?.output?.seo?.title, result?.output?.seo?.description].filter(Boolean).join("\n");
+  const tagsList = result?.output?.tags || ["organik", "pamuk", "tişört", "sürdürülebilir"];
+  const tagsCopyText = (result?.output?.tags || []).join(", ");
+
   return (
     <div className="container py-10 space-y-6">
       <div className="max-w-3xl space-y-2">
@@ -331,8 +414,15 @@ export default function GeneratePage() {
               placeholder="Örn: Organik pamuk tişört"
               className="w-full rounded-lg border px-3 py-2 outline-none focus:border-primary"
               value={form.title}
-              onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              maxLength={TITLE_MAX_LENGTH}
             />
+            <div className="flex items-center justify-between text-xs">
+              {titleError ? <span className="text-red-600">{titleError}</span> : <span className="text-slate-500">JavaScript kodu kabul edilmez</span>}
+              <span className="text-slate-500">
+                {form.title.length}/{TITLE_MAX_LENGTH}
+              </span>
+            </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {renderSelectField("category", "Kategori", form.category, [
@@ -385,28 +475,40 @@ export default function GeneratePage() {
           </div>
           <div className="space-y-3 text-sm text-slate-700">
             <div>
-              <p className="text-xs uppercase text-slate-400">Uzun açıklama</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase text-slate-400">Uzun açıklama</p>
+                <CopyButton copyKey="longDescription" value={result?.output?.longDescription} />
+              </div>
               <div className="rounded-lg bg-slate-50 p-3">
                 {result?.output?.longDescription || "Başlatmak için ürünü doldurun. API yanıtı burada görünecek."}
               </div>
             </div>
             <div>
-              <p className="text-xs uppercase text-slate-400">Kısa açıklama</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase text-slate-400">Kısa açıklama</p>
+                <CopyButton copyKey="shortDescription" value={result?.output?.shortDescription} />
+              </div>
               <div className="rounded-lg bg-slate-50 p-3">
                 {result?.output?.shortDescription || "Öne çıkan madde ve bullet point örnekleri."}
               </div>
             </div>
             <div>
-              <p className="text-xs uppercase text-slate-400">SEO meta</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase text-slate-400">SEO meta</p>
+                <CopyButton copyKey="seoMeta" value={seoCopyText} />
+              </div>
               <div className="rounded-lg bg-slate-50 p-3 space-y-1">
-                <div className="font-semibold">{result?.output?.seo?.title || "Meta title"}</div>
-                <div>{result?.output?.seo?.description || "Meta description placeholder."}</div>
+                <div className="font-semibold">{seoTitleText}</div>
+                <div>{seoDescriptionText}</div>
               </div>
             </div>
             <div>
-              <p className="text-xs uppercase text-slate-400">Tags / keywords</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase text-slate-400">Tags / keywords</p>
+                <CopyButton copyKey="tags" value={tagsCopyText || tagsList.join(", ")} />
+              </div>
               <div className="rounded-lg bg-slate-50 p-3">
-                {(result?.output?.tags || ["organik", "pamuk", "tişört", "sürdürülebilir"]).join(", ")}
+                {tagsList.join(", ")}
               </div>
             </div>
             {result?.info && (

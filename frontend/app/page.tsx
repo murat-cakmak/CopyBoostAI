@@ -170,16 +170,16 @@ export default function HomePage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a
-              href={user ? "/generate" : "/auth/register"}
+              href="/generate"
               className="rounded-lg bg-primary px-4 py-2 text-white font-semibold hover:bg-slate-800"
             >
-              {user ? "İçerik üretmeye devam et" : "Hemen ücretsiz deneyin"}
+              Hemen ücretsiz deneyin
             </a>
             <a
-              href="/generate"
+              href={user ? "/generate" : "/auth/register"}
               className="rounded-lg border border-primary px-4 py-2 font-semibold text-primary hover:bg-slate-50 shadow-2xl"
             >
-              İçerik üret
+              {user ? "İçerik üretmeye devam et" : "İçerik üret"}
             </a>
           </div>
         </div>

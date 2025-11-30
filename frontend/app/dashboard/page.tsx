@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DAILY_LIMIT, GenerationHistoryItem, getHistory } from "@/lib/history";
 import { AuthUser, getStoredUser } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,8 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [selected, setSelected] = useState<GenerationHistoryItem | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const refreshHistory = () => {
     setHistory(getHistory());
@@ -138,6 +140,45 @@ export default function DashboardPage() {
     Math.round((displayDailyUsed / (effectiveDailyLimit || 1)) * 100)
   );
   const recentItems = history.slice(0, 6);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
+
+  const handleCopy = async (key: string, value?: string | null) => {
+    const text = (value || "").toString().trim();
+    if (!text) return;
+
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        setCopiedKey(key);
+        copyTimeoutRef.current = setTimeout(() => setCopiedKey(null), 1500);
+      }
+    } catch (error) {
+      // best-effort copy; failures are silent
+      console.error("Copy failed", error);
+    }
+  };
+
+  const CopyButton = ({ copyKey, value }: { copyKey: string; value?: string | null }) => (
+    <button
+      type="button"
+      onClick={() => handleCopy(copyKey, value)}
+      disabled={!value || !value.toString().trim()}
+      className="flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+      title={copiedKey === copyKey ? "Kopyalandı" : "Sonucu kopyala"}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </svg>
+      <span>{copiedKey === copyKey ? "Kopyalandı" : "Kopyala"}</span>
+    </button>
+  );
 
   if (!ready) {
     return (
@@ -292,29 +333,44 @@ export default function DashboardPage() {
             </div>
             <div className="mt-4 space-y-3 text-sm text-slate-700">
               <div>
-                <p className="text-xs uppercase text-slate-400">Uzun açıklama</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs uppercase text-slate-400">Uzun açıklama</p>
+                  <CopyButton copyKey="modal-long" value={selected.output.longDescription || ""} />
+                </div>
                 <div className="rounded-lg bg-slate-50 p-3">
                   {selected.output.longDescription || "—"}
                 </div>
               </div>
               <div>
-                <p className="text-xs uppercase text-slate-400">Kısa açıklama</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs uppercase text-slate-400">Kısa açıklama</p>
+                  <CopyButton copyKey="modal-short" value={selected.output.shortDescription || ""} />
+                </div>
                 <div className="rounded-lg bg-slate-50 p-3">
                   {selected.output.shortDescription || "—"}
                 </div>
               </div>
               <div className="grid gap-3 md:grid-cols-2">
                 <div className="rounded-lg bg-slate-50 p-3">
-                  <p className="text-xs uppercase text-slate-400">SEO Title</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs uppercase text-slate-400">SEO Title</p>
+                    <CopyButton copyKey="modal-seo-title" value={selected.output.seoTitle || ""} />
+                  </div>
                   <p className="font-semibold">{selected.output.seoTitle || "—"}</p>
                 </div>
                 <div className="rounded-lg bg-slate-50 p-3">
-                  <p className="text-xs uppercase text-slate-400">SEO Description</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs uppercase text-slate-400">SEO Description</p>
+                    <CopyButton copyKey="modal-seo-description" value={selected.output.seoDescription || ""} />
+                  </div>
                   <p>{selected.output.seoDescription || "—"}</p>
                 </div>
               </div>
               <div>
-                <p className="text-xs uppercase text-slate-400">Tags</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs uppercase text-slate-400">Tags</p>
+                  <CopyButton copyKey="modal-tags" value={(selected.output.tags || []).join(", ")} />
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {(selected.output.tags || []).length > 0
                     ? (selected.output.tags || []).map((tag) => (
