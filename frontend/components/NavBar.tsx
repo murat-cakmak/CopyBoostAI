@@ -135,6 +135,13 @@ export function NavBar() {
                 </button>
                 {profileMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-lg border bg-white p-2 shadow-lg">
+                    <a
+                      href="/settings"
+                      className="block w-full rounded-md px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Ayarlar
+                    </a>
                     {user.role === "admin" && (
                       <a
                         href="/admin"
@@ -226,6 +233,11 @@ export function NavBar() {
               <a href="/billing" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
                 Billing
               </a>
+              {user && (
+                <a href="/settings" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
+                  Ayarlar
+                </a>
+              )}
               {user?.role === "admin" && (
                 <a href="/admin" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
                   Admin

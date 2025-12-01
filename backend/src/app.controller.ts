@@ -87,6 +87,15 @@ export class AppController {
     return this.appService.getProfile(userId);
   }
 
+  @Patch('auth/me')
+  updateProfile(
+    @Headers('x-user-id') userId: string,
+    @Body()
+    body: { name?: string; currentPassword?: string; newPassword?: string },
+  ) {
+    return this.appService.updateProfile(body, userId);
+  }
+
   @Post('content/generate')
   @UseGuards(GenerateRateLimitGuard)
   generateContent(

@@ -119,6 +119,90 @@ export class AppService {
     };
   }
 
+  async updateProfile(
+    input: { name?: string; currentPassword?: string; newPassword?: string },
+    userId?: string
+  ) {
+    if (!userId || !userId.trim()) {
+      throw new BadRequestException("Kullanıcı bilgisi eksik.");
+    }
+
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException("Kullanıcı bulunamadı.");
+    }
+
+    const name =
+      typeof input.name === "string" ? input.name.trim() : undefined;
+    const currentPassword =
+      typeof input.currentPassword === "string"
+        ? input.currentPassword.trim()
+        : undefined;
+    const newPassword =
+      typeof input.newPassword === "string"
+        ? input.newPassword.trim()
+        : undefined;
+
+    let hasChanges = false;
+
+    if (name !== undefined) {
+      if (name && name.length < 2) {
+        throw new BadRequestException("İsim en az 2 karakter olmalı.");
+      }
+      if (name && name.length > 120) {
+        throw new BadRequestException("İsim 120 karakteri aşamaz.");
+      }
+      user.name = name || null;
+      hasChanges = true;
+    }
+
+    if (currentPassword || newPassword) {
+      if (!currentPassword || !newPassword) {
+        throw new BadRequestException(
+          "Parola güncellemek için mevcut ve yeni parola zorunlu."
+        );
+      }
+
+      if (!user.passwordHash) {
+        throw new UnauthorizedException("Parola doğrulanamadı.");
+      }
+
+      const valid = this.verifyPassword(currentPassword, user.passwordHash);
+      if (!valid) {
+        throw new UnauthorizedException("Mevcut parola hatalı.");
+      }
+
+      if (newPassword.length < 8) {
+        throw new BadRequestException("Yeni parola en az 8 karakter olmalı.");
+      }
+      if (newPassword.length > 128) {
+        throw new BadRequestException(
+          "Yeni parola 128 karakteri aşamaz."
+        );
+      }
+
+      user.passwordHash = this.hashPassword(newPassword);
+      hasChanges = true;
+    }
+
+    if (!hasChanges) {
+      return {
+        message: "Güncellenecek bir alan bulunamadı.",
+        user: this.sanitizeUser(user),
+      };
+    }
+
+    const saved = await this.usersRepository.save(user);
+
+    return {
+      message: "Profil güncellendi.",
+      user: this.sanitizeUser(saved),
+    };
+  }
+
   private async getUsageStatsForUser(userId: string) {
     const now = new Date();
     const startOfDay = new Date(now);
