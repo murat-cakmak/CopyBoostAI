@@ -425,27 +425,55 @@ export default function GeneratePage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {renderSelectField("category", "Kategori", form.category, [
-              { value: "giyim", label: "Giyim" },
-              { value: "elektronik", label: "Elektronik" },
-              { value: "kozmetik", label: "Kozmetik" },
+              { value: "giyim", label: "👕 Giyim & Moda" },
+              { value: "elektronik", label: "🔌 Elektronik" },
+              { value: "kozmetik", label: "💄 Kozmetik & Bakım" },
+              { value: "ev-yasam", label: "🏠 Ev & Yaşam" },
+              { value: "spor-outdoor", label: "🏃‍♂️ Spor & Outdoor" },
+              { value: "anne-bebek", label: "🍼 Anne & Bebek" },
+              { value: "pet", label: "🐾 Evcil Hayvan" },
+              { value: "market", label: "🛒 Market & Gıda" },
+              { value: "oto-aksesuar", label: "🚗 Otomotiv & Aksesuar" },
+              { value: "hobi-sanat", label: "🎨 Hobi & Sanat" },
             ])}
             {renderSelectField("platform", "Platform", form.platform, [
-              { value: "trendyol", label: "Trendyol" },
-              { value: "hepsiburada", label: "Hepsiburada" },
-              { value: "amazon", label: "Amazon" },
-              { value: "shopify", label: "Shopify" },
+              { value: "trendyol", label: "🧡 Trendyol" },
+              { value: "hepsiburada", label: "🟠 Hepsiburada" },
+              { value: "amazon", label: "🛒 Amazon" },
+              { value: "shopify", label: "🛍️ Shopify" },
+              { value: "etsy", label: "🧵 Etsy" },
+              { value: "aliexpress", label: "🌏 AliExpress" },
+              { value: "instagram", label: "📸 Instagram" },
+              { value: "tiktok", label: "🎵 TikTok" },
+              { value: "facebook", label: "📘 Facebook" },
+              { value: "youtube", label: "▶️ YouTube" },
+              { value: "pinterest", label: "📌 Pinterest" },
             ])}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {renderSelectField("language", "Hedef dil", form.language, [
-              { value: "tr", label: "Türkçe" },
-              { value: "en", label: "İngilizce" },
+              { value: "tr", label: "🇹🇷 Türkçe" },
+              { value: "en", label: "🇺🇸 İngilizce" },
+              { value: "de", label: "🇩🇪 Almanca" },
+              { value: "fr", label: "🇫🇷 Fransızca" },
+              { value: "es", label: "🇪🇸 İspanyolca" },
+              { value: "it", label: "🇮🇹 İtalyanca" },
+              { value: "ar", label: "🇸🇦 Arapça" },
+              { value: "ru", label: "🇷🇺 Rusça" },
+              { value: "zh", label: "🇨🇳 Çince" },
+              { value: "nl", label: "🇳🇱 Flemenkçe" },
             ])}
             {renderSelectField("tone", "Ton", form.tone, [
-              { value: "resmi", label: "Resmi" },
-              { value: "samimi", label: "Samimi" },
-              { value: "eglenceli", label: "Eğlenceli" },
-              { value: "teknik", label: "Teknik" },
+              { value: "resmi", label: "🏛️ Resmi" },
+              { value: "samimi", label: "🤗 Samimi" },
+              { value: "eglenceli", label: "🎉 Eğlenceli" },
+              { value: "teknik", label: "🧠 Teknik" },
+              { value: "ikna-edici", label: "🧲 İkna Edici" },
+              { value: "hikaye", label: "📖 Hikaye Anlatımı" },
+              { value: "minimal", label: "🌿 Minimal" },
+              { value: "premium", label: "💎 Premium" },
+              { value: "dinamik", label: "⚡ Dinamik" },
+              { value: "acil-kampanya", label: "⏱️ Acil / FOMO" },
             ])}
           </div>
           <button
@@ -457,7 +485,7 @@ export default function GeneratePage() {
               ? "Üretiliyor..."
               : loadingProfile
                 ? "Limit kontrol ediliyor..."
-                : "Generate"}
+                : "Üret"}
           </button>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <p className="text-xs text-slate-500">
