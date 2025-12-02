@@ -393,8 +393,7 @@ export default function GeneratePage() {
       <div className="max-w-3xl space-y-2">
         <h1 className="text-3xl font-bold text-primary mt-5">Ürün detaylarını girin ve AI çıktısını alın</h1>
         <p className="text-slate-600">
-          Form alanları ve prompt varyasyonları için temel iskelet. Backend API bağlandığında gerçek zamanlı
-          yanıtları gösterecek.
+          CopyBoost AI, Trendyol, Hepsiburada, Amazon, Shopify ve sosyal medya satış kanallarındaki satıcılar için saniyeler içinde SEO uyumlu ürün açıklamaları, meta başlıklar ve etiket önerileri oluşturan bir yapay zekâ aracıdır. Hız, satış artırma ve SEO avantajlarını bir arada sunar.
         </p>
         {limitReached && (
           <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
