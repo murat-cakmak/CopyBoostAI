@@ -1,16 +1,21 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { GenerateRateLimitGuard } from './guards/generate-rate-limit.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { Request } from 'express';
+
+type AdminRequest = Request & { user?: { id?: string } };
 
 @Controller()
 export class AppController {
@@ -41,6 +46,19 @@ export class AppController {
     return this.appService.setUserDailyLimit(id, body.dailyRequestLimit);
   }
 
+  @Patch('admin/users/:id/password')
+  @UseGuards(AdminGuard)
+  setUserPassword(
+    @Param('id') id: string,
+    @Body() body: { currentPassword?: string; newPassword: string },
+  ) {
+    return this.appService.setUserPasswordAsAdmin(
+      id,
+      body.currentPassword,
+      body.newPassword,
+    );
+  }
+
   @Post('admin/users/:id/subscription')
   @UseGuards(AdminGuard)
   createSubscription(@Param('id') id: string) {
@@ -51,6 +69,12 @@ export class AppController {
   @UseGuards(AdminGuard)
   cancelSubscription(@Param('id') id: string) {
     return this.appService.cancelSubscriptionForUser(id);
+  }
+
+  @Delete('admin/users/:id')
+  @UseGuards(AdminGuard)
+  deleteUser(@Param('id') id: string, @Req() req: AdminRequest) {
+    return this.appService.deleteUser(id, req.user?.id);
   }
 
   @Get('admin/subscriptions')

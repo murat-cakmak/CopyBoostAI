@@ -361,6 +361,79 @@ export class AppService {
     };
   }
 
+  async setUserPasswordAsAdmin(
+    userId: string,
+    currentPassword?: string,
+    newPassword?: string
+  ) {
+    const password = typeof newPassword === "string" ? newPassword.trim() : "";
+    if (!password) {
+      throw new BadRequestException("Yeni parola zorunlu.");
+    }
+
+    if (password.length < 8) {
+      throw new BadRequestException("Yeni parola en az 8 karakter olmalı.");
+    }
+
+    if (password.length > 128) {
+      throw new BadRequestException("Yeni parola 128 karakteri aşamaz.");
+    }
+
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException("Kullanıcı bulunamadı.");
+    }
+
+    const existingPassword =
+      typeof currentPassword === "string" ? currentPassword.trim() : "";
+    const requiresCurrentPassword = user.role === "admin";
+
+    if (requiresCurrentPassword) {
+      if (!existingPassword) {
+        throw new BadRequestException("Mevcut parola zorunlu.");
+      }
+
+      if (!user.passwordHash) {
+        throw new BadRequestException("Mevcut parola doğrulanamadı.");
+      }
+
+      const valid = this.verifyPassword(existingPassword, user.passwordHash);
+      if (!valid) {
+        throw new UnauthorizedException("Mevcut parola hatalı.");
+      }
+    }
+
+    user.passwordHash = this.hashPassword(password);
+    const saved = await this.usersRepository.save(user);
+
+    return {
+      message: "Parola güncellendi.",
+      user: this.sanitizeUser(saved),
+    };
+  }
+
+  async deleteUser(userId: string, adminId?: string) {
+    if (!userId || !userId.trim()) {
+      throw new BadRequestException("Kullanıcı bilgisi eksik.");
+    }
+
+    if (adminId && adminId === userId) {
+      throw new BadRequestException("Admin kendi hesabını silemez.");
+    }
+
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException("Kullanıcı bulunamadı.");
+    }
+
+    await this.usersRepository.remove(user);
+
+    return {
+      message: "Kullanıcı silindi.",
+      user: this.sanitizeUser(user),
+    };
+  }
+
   async createSubscriptionForUser(userId: string) {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {

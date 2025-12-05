@@ -48,9 +48,30 @@ export default function AdminPage() {
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
   const [limitEdits, setLimitEdits] = useState<Record<string, string>>({});
   const [subCreating, setSubCreating] = useState<string | null>(null);
+  const [passwordEdits, setPasswordEdits] = useState<Record<string, string>>({});
+  const [passwordOldEdits, setPasswordOldEdits] = useState<Record<string, string>>({});
+  const [passwordUpdatingUserId, setPasswordUpdatingUserId] = useState<string | null>(null);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const authUser = getStoredUser();
 
   const isAdmin = user?.role === "admin";
+
+  const showNotification = (message: string, type: "success" | "error" = "success") => {
+    setNotification({ message, type });
+  };
+
+  const handleApiError = (err: unknown, fallbackMessage = "Bilinmeyen hata") => {
+    const msg = err instanceof Error ? err.message : fallbackMessage;
+    setError(msg);
+    showNotification(msg, "error");
+  };
+
+  useEffect(() => {
+    if (!notification) return;
+    const timer = window.setTimeout(() => setNotification(null), 4000);
+    return () => window.clearTimeout(timer);
+  }, [notification]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -86,8 +107,7 @@ export default function AdminPage() {
       setUsers(usersBody || []);
       setSubs(subsBody || []);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Bilinmeyen hata";
-      setError(msg);
+      handleApiError(err);
     } finally {
       setLoading(false);
     }
@@ -121,7 +141,9 @@ export default function AdminPage() {
     const value = limitEdits[userId];
     const parsed = Number(value);
     if (!Number.isFinite(parsed) || parsed < 0) {
-      setError("Geçerli bir günlük limit girin.");
+      const msg = "Geçerli bir günlük limit girin.";
+      setError(msg);
+      showNotification(msg, "error");
       return;
     }
     setUpdatingUserId(userId);
@@ -141,10 +163,12 @@ export default function AdminPage() {
           Array.isArray(body?.message) ? body.message.join(", ") : body?.message || `Limit güncellenemedi (${res.status})`;
         throw new Error(msg);
       }
+      const successMessage =
+        typeof body?.message === "string" ? body.message : "Günlük limit güncellendi.";
+      showNotification(successMessage, "success");
       await fetchData();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Bilinmeyen hata";
-      setError(msg);
+      handleApiError(err);
     } finally {
       setUpdatingUserId(null);
     }
@@ -167,12 +191,122 @@ export default function AdminPage() {
           Array.isArray(body?.message) ? body.message.join(", ") : body?.message || `İşlem başarısız (${res.status})`;
         throw new Error(msg);
       }
+      const successMessage =
+        typeof body?.message === "string"
+          ? body.message
+          : isActive
+            ? "Abonelik iptal edildi."
+            : "Abonelik oluşturuldu.";
+      showNotification(successMessage, "success");
       await fetchData();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Bilinmeyen hata";
-      setError(msg);
+      handleApiError(err);
     } finally {
       setSubCreating(null);
+    }
+  };
+
+  const handlePasswordReset = async (userId: string) => {
+    if (!userId) {
+      const msg = "Kullanıcı bilgisi eksik.";
+      setError(msg);
+      showNotification(msg, "error");
+      return;
+    }
+    const targetUser = users.find((u) => (u.id || "") === userId);
+    const requiresCurrentPassword = targetUser?.role === "admin";
+    const currentPassword = passwordOldEdits[userId]?.trim() || "";
+    const newPassword = passwordEdits[userId]?.trim() || "";
+    if (requiresCurrentPassword && !currentPassword) {
+      const msg = "Mevcut parola girin.";
+      setError(msg);
+      showNotification(msg, "error");
+      return;
+    }
+    if (!newPassword) {
+      const msg = "Yeni parola girin.";
+      setError(msg);
+      showNotification(msg, "error");
+      return;
+    }
+    if (newPassword.length < 8) {
+      const msg = "Yeni parola en az 8 karakter olmalı.";
+      setError(msg);
+      showNotification(msg, "error");
+      return;
+    }
+    setPasswordUpdatingUserId(userId);
+    setError(null);
+    try {
+      const res = await fetch(`${apiBase}/admin/users/${userId}/password`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...(authUser?.id ? { "x-user-id": authUser.id as string } : {}),
+        },
+        body: JSON.stringify({
+          ...(requiresCurrentPassword ? { currentPassword } : {}),
+          newPassword,
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const msg =
+          Array.isArray(body?.message) ? body.message.join(", ") : body?.message || `Parola güncellenemedi (${res.status})`;
+        throw new Error(msg);
+      }
+      setPasswordEdits((prev) => ({ ...prev, [userId]: "" }));
+      if (requiresCurrentPassword) {
+        setPasswordOldEdits((prev) => ({ ...prev, [userId]: "" }));
+      }
+      const successMessage = typeof body?.message === "string" ? body.message : "Parola güncellendi.";
+      showNotification(successMessage, "success");
+    } catch (err) {
+      handleApiError(err);
+    } finally {
+      setPasswordUpdatingUserId(null);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, email?: string | null) => {
+    if (!userId) {
+      const msg = "Kullanıcı bilgisi eksik.";
+      setError(msg);
+      showNotification(msg, "error");
+      return;
+    }
+    if (authUser?.id === userId) {
+      const msg = "Admin kendi hesabını silemez.";
+      setError(msg);
+      showNotification(msg, "error");
+      return;
+    }
+    const confirmed = window.confirm(
+      `${email || "Bu kullanıcı"} hesabını kalıcı olarak silmek istediğinize emin misiniz?`,
+    );
+    if (!confirmed) return;
+    setDeletingUserId(userId);
+    setError(null);
+    try {
+      const res = await fetch(`${apiBase}/admin/users/${userId}`, {
+        method: "DELETE",
+        headers: authUser?.id ? { "x-user-id": authUser.id as string } : {},
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const msg =
+          Array.isArray(body?.message) ? body.message.join(", ") : body?.message || `Kullanıcı silinemedi (${res.status})`;
+        throw new Error(msg);
+      }
+      setUsers((prev) => prev.filter((u) => (u.id || "") !== userId));
+      await fetchData();
+      const successMessage =
+        typeof body?.message === "string" ? body.message : `${email || "Kullanıcı"} silindi.`;
+      showNotification(successMessage, "success");
+    } catch (err) {
+      handleApiError(err);
+    } finally {
+      setDeletingUserId(null);
     }
   };
 
@@ -197,12 +331,36 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container py-10 space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold text-primary mt-5">Kullanıcı ve abonelik listesi</h1>
-          <p className="text-sm text-slate-600">Tüm kullanıcıları ve abonelik durumlarını görüntüleyin.</p>
+    <>
+      {notification && (
+        <div
+          className={`fixed top-4 right-4 z-50 w-80 rounded-lg border px-4 py-3 text-sm shadow-lg transition-opacity ${
+            notification.type === "success"
+              ? "border-green-200 bg-green-50 text-green-800"
+              : "border-red-200 bg-red-50 text-red-800"
+          }`}
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <span>{notification.message}</span>
+            <button
+              type="button"
+              className="text-lg leading-none text-slate-500 hover:text-slate-700"
+              onClick={() => setNotification(null)}
+              aria-label="Bildirimi kapat"
+            >
+              &times;
+            </button>
+          </div>
         </div>
+      )}
+      <div className="container py-10 space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-primary mt-5">Kullanıcı ve abonelik listesi</h1>
+            <p className="text-sm text-slate-600">Tüm kullanıcıları ve abonelik durumlarını görüntüleyin.</p>
+          </div>
         <button
           onClick={fetchData}
           className="rounded-lg border px-4 py-2 text-sm font-semibold text-primary hover:bg-slate-50 disabled:opacity-60"
@@ -295,23 +453,65 @@ export default function AdminPage() {
                   </td>
                   <td className="p-2 text-slate-500">{u.createdAt ? new Date(u.createdAt).toLocaleString("tr-TR") : "-"}</td>
                   <td className="p-2">
-                    <button
-                      className={`rounded px-3 py-1 text-xs font-semibold disabled:opacity-60 ${
-                        u.subscription?.status === "active"
-                          ? "border border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
-                          : "border border-green-200 bg-green-50 text-green-700 hover:bg-green-100"
-                      }`}
-                      onClick={() =>
-                        handleSubscriptionAction(u.id || "", u.subscription?.status === "active")
-                      }
-                      disabled={subCreating === (u.id || "")}
-                    >
-                      {subCreating === (u.id || "")
-                        ? "İşleniyor..."
-                        : u.subscription?.status === "active"
-                          ? "Abonelikten çıkar"
-                          : "Abonelik ver"}
-                    </button>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className={`rounded px-3 py-1 text-xs font-semibold disabled:opacity-60 ${
+                          u.subscription?.status === "active"
+                            ? "border border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+                            : "border border-green-200 bg-green-50 text-green-700 hover:bg-green-100"
+                        }`}
+                        onClick={() =>
+                          handleSubscriptionAction(u.id || "", u.subscription?.status === "active")
+                        }
+                        disabled={subCreating === (u.id || "")}
+                      >
+                        {subCreating === (u.id || "")
+                          ? "İşleniyor..."
+                          : u.subscription?.status === "active"
+                            ? "Abonelikten çıkar"
+                            : "Abonelik ver"}
+                      </button>
+                      <div className="flex flex-col gap-1">
+                        {u.role === "admin" && (
+                          <input
+                            type="password"
+                            className="w-40 rounded border px-2 py-1 text-xs"
+                            placeholder="Mevcut şifre"
+                            value={passwordOldEdits[u.id || ""] ?? ""}
+                            onChange={(e) =>
+                              setPasswordOldEdits((prev) => ({ ...prev, [u.id || ""]: e.target.value }))
+                            }
+                            disabled={passwordUpdatingUserId === (u.id || "")}
+                          />
+                        )}
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="password"
+                            className="w-40 rounded border px-2 py-1 text-xs"
+                            placeholder="Yeni şifre"
+                            value={passwordEdits[u.id || ""] ?? ""}
+                            onChange={(e) =>
+                              setPasswordEdits((prev) => ({ ...prev, [u.id || ""]: e.target.value }))
+                            }
+                            disabled={passwordUpdatingUserId === (u.id || "")}
+                          />
+                          <button
+                            className="rounded border px-2 py-1 text-xs font-semibold text-primary hover:bg-slate-50 disabled:opacity-60"
+                            onClick={() => handlePasswordReset(u.id || "")}
+                            disabled={passwordUpdatingUserId === (u.id || "")}
+                          >
+                            {passwordUpdatingUserId === (u.id || "") ? "Kaydediliyor..." : "Şifreyi değiştir"}
+                          </button>
+                        </div>
+                      </div>
+                      <button
+                        className="rounded border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 hover:bg-red-100 disabled:opacity-60"
+                        onClick={() => handleDeleteUser(u.id || "", u.email)}
+                        disabled={deletingUserId === (u.id || "")}
+                      >
+                        {deletingUserId === (u.id || "") ? "Siliniyor..." : "Kullanıcıyı sil"}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -368,6 +568,7 @@ export default function AdminPage() {
           </table>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
