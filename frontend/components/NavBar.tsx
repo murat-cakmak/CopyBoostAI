@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AuthUser, clearStoredUser, getStoredUser } from "@/lib/auth";
 import { useTheme } from "next-themes";
@@ -53,17 +54,18 @@ export function NavBar() {
   return (
     <header className="border-b bg-white/80 backdrop-blur py-5">
       <div className="container flex items-center justify-between py-4">
-        <div className="flex items-center gap-2">
-          <a href="/" className="hover:text-primary">
-            <div className="h-12 w-12 rounded-lg bg-primary text-white grid place-items-center font-semibold">
-              CB
-            </div>
+        <div className="flex items-center gap-3">
+          <a href="/" className="flex items-center hover:text-primary" aria-label="CopyBoost AI ana sayfası">
+            <Image
+              src="/copyboostai-logo.webp"
+              alt="CopyBoost AI"
+              width={160}
+              height={48}
+              priority
+              className="h-10 w-auto sm:h-12"
+              sizes="(max-width: 640px) 120px, (max-width: 1024px) 140px, 160px"
+            />
           </a>
-
-          <div>
-            <p className="text-lg font-semibold">CopyBoost AI</p>
-            <p className="text-sm text-slate-500">E-ticaret için üretken içerik</p>
-          </div>
         </div>
         <nav className="hidden items-center gap-4 text-sm text-slate-600 lg:flex">
             <a href="/" className="hover:text-primary">

@@ -10,6 +10,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "CopyBoost AI - AI SEO aracı | E-Ticaret SEO aracı | Sosyal Medya SEO aracı",
   description: "SEO odaklı E-Ticaret ve Sosyal Medyada ürün açıklamaları ve pazarlama içerikleri üretin",
+  icons: {
+    icon: "/copyboostai.ico",
+    shortcut: "/copyboostai.ico",
+    apple: "/copyboostai-logo.webp"
+  },
   robots: {
     index: true,
     follow: true,
