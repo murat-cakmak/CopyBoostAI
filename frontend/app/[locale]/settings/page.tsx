@@ -380,17 +380,17 @@ export default function SettingsPage() {
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600">
                 <span>{usageCopy.dailyLimit || t("settings.usageCard.dailyLimit", "Günlük limit")}</span>
                 <span className="text-right">
-                  {dailyLimit ?? usageCopy.unlimited || t("settings.usageCard.unlimited", "Sınırsız")}
+                  {dailyLimit ?? (usageCopy.unlimited || t("settings.usageCard.unlimited", "Sınırsız"))}
                 </span>
                 <span>{usageCopy.dailyUsed || t("settings.usageCard.dailyUsed", "Bugün kullanılan")}</span>
                 <span className="text-right">{dailyUsed}</span>
                 <span>{usageCopy.remaining || t("settings.usageCard.remaining", "Kalan")}</span>
                 <span className="text-right">
-                  {dailyRemaining ?? usageCopy.unlimited || t("settings.usageCard.unlimited", "Sınırsız")}
+                  {dailyRemaining ?? (usageCopy.unlimited || t("settings.usageCard.unlimited", "Sınırsız"))}
                 </span>
                 <span>{usageCopy.monthlyUsage || t("settings.usageCard.monthlyUsage", "Aylık kullanım")}</span>
                 <span className="text-right">
-                  {monthlyUsage ?? usageCopy.empty || t("settings.usageCard.empty", "-")}
+                  {monthlyUsage ?? (usageCopy.empty || t("settings.usageCard.empty", "-"))}
                 </span>
               </div>
             </div>

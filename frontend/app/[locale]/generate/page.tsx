@@ -27,6 +27,16 @@ export default function GeneratePage() {
   const usageLabelTemplate = generateCopy.usageLabel || "Bugünkü kullanım: {{count}} / {{limit}}";
   const usageServerTemplate = generateCopy.usageServerLabel || "(sunucu kalan: {{remaining}})";
   const copyTooltip = generateCopy.copyTooltip || t("common.copyTooltip", "Sonucu kopyala");
+  const missingTitleMessage =
+    errorsCopy.missingTitle || t("generate.errors.missingTitle", "Lütfen geçerli bir ürün başlığı girin.");
+  const noJsMessage =
+    errorsCopy.noJavascript ||
+    t("generate.errors.noJavascript", "Ürün başlığında JavaScript kodu kullanamazsınız.");
+  const clipboardUnsupportedMessage =
+    errorsCopy.clipboardUnsupported || t("generate.errors.clipboardUnsupported", "Clipboard desteklenmiyor");
+  const copyFailedMessage =
+    errorsCopy.copyFailed || t("generate.errors.copyFailed", "Kopyalama başarısız oldu.");
+  const unknownErrorMessage = errorsCopy.unknown || t("generate.errors.unknown", "Bilinmeyen hata");
   const heroTitle = generateCopy.heroTitle || t("generate.heroTitle", "Ürün detaylarını girin ve AI çıktısını alın");
   const heroDescription =
     generateCopy.heroDescription ||
@@ -133,6 +143,13 @@ export default function GeneratePage() {
       : null;
   const serverLimitReached = serverRemaining !== null && serverRemaining <= 0;
   const limitReached = serverLimitReached || dailyCount >= effectiveDailyLimit;
+  const getLimitMessage = () => {
+    const template =
+      serverLimitReached && serverRemaining !== null
+        ? generateCopy.limitReachedServer || "Günlük hakkınız doldu. Kalan: 0 / {{limit}}"
+        : generateCopy.limitReached || "Günlük {{limit}} üretim hakkınız doldu. Yarın tekrar deneyin.";
+    return template.replace("{{limit}}", String(effectiveDailyLimit));
+  };
 
   const syncDailyCount = () => {
     const today = new Date().toDateString();
@@ -284,13 +301,7 @@ export default function GeneratePage() {
     }
 
     if (limitReached) {
-      const template =
-        serverLimitReached && serverRemaining !== null
-          ? generateCopy.limitReachedServer || "Günlük hakkınız doldu. Kalan: 0 / {{limit}}"
-          : generateCopy.limitReached ||
-            "Günlük {{limit}} üretim hakkınız doldu. Yarın tekrar deneyin.";
-      const message = template.replace("{{limit}}", String(effectiveDailyLimit));
-      setError(message);
+      setError(getLimitMessage());
       return;
     }
 
