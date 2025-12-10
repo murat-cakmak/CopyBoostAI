@@ -18,6 +18,7 @@ import { User } from "./entities/user.entity";
 import { UsageLog } from "./entities/usage-log.entity";
 import { Subscription } from "./entities/subscription.entity";
 import { Content } from "./entities/content.entity";
+import { LanguageFile } from "./entities/language-file.entity";
 
 @Injectable()
 export class AppService {
@@ -31,7 +32,9 @@ export class AppService {
     @InjectRepository(Subscription)
     private readonly subscriptionsRepository: Repository<Subscription>,
     @InjectRepository(Content)
-    private readonly contentsRepository: Repository<Content>
+    private readonly contentsRepository: Repository<Content>,
+    @InjectRepository(LanguageFile)
+    private readonly languageFilesRepository: Repository<LanguageFile>
   ) {}
 
   private hashPassword(password: string): string {
@@ -72,6 +75,38 @@ export class AppService {
   private sanitizeUser(user: User) {
     const { passwordHash, ...rest } = user;
     return rest;
+  }
+
+  private sanitizeLanguageFile(file: LanguageFile) {
+    return {
+      id: file.id,
+      code: file.code,
+      name: file.name,
+      flagIcon: file.flagIcon,
+      isDefault: file.isDefault,
+      content: file.content ?? {},
+    };
+  }
+
+  async getLanguageFiles() {
+    const files = await this.languageFilesRepository.find({
+      order: { isDefault: "DESC", name: "ASC" },
+    });
+    return files.map((file) => this.sanitizeLanguageFile(file));
+  }
+
+  async getLanguageFile(code?: string) {
+    if (!code || !code.trim()) {
+      throw new BadRequestException("Dil kodu gerekli.");
+    }
+    const normalized = code.trim().toLowerCase();
+    const file = await this.languageFilesRepository.findOne({
+      where: { code: normalized },
+    });
+    if (!file) {
+      throw new NotFoundException("Dil bulunamadı.");
+    }
+    return this.sanitizeLanguageFile(file);
   }
 
   async getProfile(userId?: string) {

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AuthUser, getStoredUser } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import { useLocalizedPath } from "@/hooks/useLocalizedPath";
 
 type AdminUser = {
   id?: string;
@@ -38,6 +39,7 @@ type AdminSubscription = {
 export default function AdminPage() {
   const router = useRouter();
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
+  const localizedPath = useLocalizedPath();
 
   const [user, setUser] = useState<AuthUser | null>(null);
   const [ready, setReady] = useState(false);
@@ -118,7 +120,7 @@ export default function AdminPage() {
     setUser(currentUser);
     setReady(true);
     if (!currentUser || currentUser.role !== "admin") {
-      router.replace("/auth/login");
+      router.replace(localizedPath("/auth/login"));
       return;
     }
     fetchData();
@@ -127,13 +129,13 @@ export default function AdminPage() {
       const nextUser = getStoredUser();
       setUser(nextUser);
       if (!nextUser || nextUser.role !== "admin") {
-        router.replace("/auth/login");
+        router.replace(localizedPath("/auth/login"));
       }
     };
 
     window.addEventListener("copyboost-auth-changed", handleAuthChange);
     return () => window.removeEventListener("copyboost-auth-changed", handleAuthChange);
-  }, [router]);
+  }, [router, localizedPath]);
 
   const activeSubs = useMemo(() => subs.filter((s) => s.status === "active"), [subs]);
 

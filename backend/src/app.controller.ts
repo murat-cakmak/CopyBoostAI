@@ -31,6 +31,16 @@ export class AppController {
     return this.appService.getWelcome();
   }
 
+  @Get('languages')
+  getLanguages() {
+    return this.appService.getLanguageFiles();
+  }
+
+  @Get('languages/:code')
+  getLanguage(@Param('code') code: string) {
+    return this.appService.getLanguageFile(code);
+  }
+
   @Get('admin/users')
   @UseGuards(AdminGuard)
   getAllUsers() {

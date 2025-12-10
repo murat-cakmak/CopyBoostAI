@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
-import { NavBar } from "@/components/NavBar";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { headers } from "next/headers";
+import { DEFAULT_LANGUAGE, isSupportedLocale } from "@/lib/i18n";
+
+export const dynamic = "force-dynamic";
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 
@@ -25,13 +27,13 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const headerList = headers();
+  const localeFromHeader = headerList.get("x-copyboost-locale");
+  const htmlLang = isSupportedLocale(localeFromHeader) ? localeFromHeader : DEFAULT_LANGUAGE;
+
   return (
-    <html lang="tr">
+    <html lang={htmlLang}>
       <head>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-7MT2WFWK5B" strategy="afterInteractive" />
         <Script id="gtag-init" strategy="afterInteractive">
@@ -44,21 +46,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="min-h-screen flex flex-col">
-            <NavBar />
-            <main className="flex-1">{children}</main>
-            <footer className="border-t bg-white py-6 text-center text-sm text-slate-500 mt-5 px-5">
-              SEO uyumlu ürün açıklamalarını saniyeler içinde oluşturun. © 2025{" "}
-              <a className="font-bold" href="http://muratcakmak.com/" target="_blank" rel="nofollow">
-                CopyBoost AI
-              </a>
-              . Tüm hakları saklıdır.
-            </footer>
-          </div>
-        </ThemeProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

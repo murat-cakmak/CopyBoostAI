@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { DAILY_LIMIT, GenerationHistoryItem, getHistory } from "@/lib/history";
 import { AuthUser, getStoredUser } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import { useLocalizedPath } from "@/hooks/useLocalizedPath";
+import { useLanguage } from "@/components/LanguageProvider";
 
 type Profile = {
   plan: string;
@@ -16,7 +18,10 @@ type Profile = {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const localizedPath = useLocalizedPath();
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
+  const { t, content } = useLanguage();
+  const dashboardCopy = (content.dashboard || {}) as Record<string, any>;
   const [user, setUser] = useState<AuthUser | null>(null);
   const [ready, setReady] = useState(false);
   const [history, setHistory] = useState<GenerationHistoryItem[]>([]);
@@ -36,14 +41,14 @@ export default function DashboardPage() {
     setUser(currentUser);
     setReady(true);
     if (!currentUser) {
-      router.replace("/auth/login");
+      router.replace(localizedPath("/auth/login"));
     }
 
     const handleAuthChange = () => {
       const nextUser = getStoredUser();
       setUser(nextUser);
       if (!nextUser) {
-        router.replace("/auth/login");
+        router.replace(localizedPath("/auth/login"));
       }
     };
 
@@ -170,13 +175,17 @@ export default function DashboardPage() {
       onClick={() => handleCopy(copyKey, value)}
       disabled={!value || !value.toString().trim()}
       className="flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
-      title={copiedKey === copyKey ? "Kopyalandı" : "Sonucu kopyala"}
+      title={
+        copiedKey === copyKey
+          ? t("common.copied", "Kopyalandı")
+          : dashboardCopy.copyTooltip || t("dashboard.copyTooltip", "Sonucu kopyala")
+      }
     >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
       </svg>
-      <span>{copiedKey === copyKey ? "Kopyalandı" : "Kopyala"}</span>
+      <span>{copiedKey === copyKey ? t("common.copied", "Kopyalandı") : t("common.copy", "Kopyala")}</span>
     </button>
   );
 
@@ -184,7 +193,7 @@ export default function DashboardPage() {
     return (
       <div className="container py-10">
         <div className="rounded-xl border bg-white p-6 shadow-sm text-center">
-          <p className="text-sm text-slate-600">Yükleniyor...</p>
+          <p className="text-sm text-slate-600">{t("common.loading", "Yükleniyor...")}</p>
         </div>
       </div>
     );
@@ -194,7 +203,7 @@ export default function DashboardPage() {
     return (
       <div className="container py-10">
         <div className="rounded-xl border bg-white p-6 shadow-sm text-center">
-          <p className="text-sm text-slate-600">Yönlendiriliyorsunuz...</p>
+          <p className="text-sm text-slate-600">{t("common.redirecting", "Yönlendiriliyorsunuz...")}</p>
         </div>
       </div>
     );
@@ -203,31 +212,43 @@ export default function DashboardPage() {
   return (
     <div className="container py-10 space-y-8">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold text-primary mt-5">Kullanım özetiniz</h1>
+        <h1 className="text-3xl font-bold text-primary mt-5">
+          {dashboardCopy.title || t("dashboard.title", "Kullanım özetiniz")}
+        </h1>
         <p className="text-slate-600">
-          Yapılan aramalar ve yanıtlar kaydedildi. Üretim akışının güncel verilerini buradan takip edin.
+          {dashboardCopy.description ||
+            t(
+              "dashboard.description",
+              "Yapılan aramalar ve yanıtlar kaydedildi. Üretim akışının güncel verilerini buradan takip edin.",
+            )}
         </p>
         {loadingRemote && (
-          <p className="text-xs text-slate-500">Sunucudan geçmiş içerikler alınıyor...</p>
+          <p className="text-xs text-slate-500">
+            {dashboardCopy.serverSync || t("dashboard.serverSync", "Sunucudan geçmiş içerikler alınıyor...")}
+          </p>
         )}
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-xl border bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Plan</p>
+          <p className="text-sm text-slate-500">
+            {dashboardCopy.cards?.planTitle || t("dashboard.cards.planTitle", "Plan")}
+          </p>
           <p className="text-xl font-bold text-primary">
             {profile?.plan && profile.plan !== "free" ? profile.plan.toUpperCase() : "FREE"}
           </p>
           <p className="text-xs text-slate-500">
-            Günlük hak:{" "}
+            {t("plan.dailyQuota", "Günlük hak")}:{" "}
             {loadingProfile
-              ? "Yükleniyor..."
+              ? t("plan.loading", "Yükleniyor...")
               : effectiveDailyLimit !== null && effectiveDailyLimit !== undefined
                 ? effectiveDailyLimit
                 : DAILY_LIMIT}
           </p>
         </div>
         <div className="rounded-xl border bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Bugünkü kullanım</p>
+          <p className="text-sm text-slate-500">
+            {dashboardCopy.cards?.recentUsageTitle || t("dashboard.cards.recentUsageTitle", "Bugünkü kullanım")}
+          </p>
           <p className="text-xl font-bold text-primary">
             {displayDailyUsed} / {effectiveDailyLimit}
           </p>
@@ -236,23 +257,33 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="rounded-xl border bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Toplam içerik</p>
+          <p className="text-sm text-slate-500">
+            {dashboardCopy.cards?.totalContentLabel || t("dashboard.cards.totalContentLabel", "Toplam içerik")}
+          </p>
           <p className="text-xl font-bold text-primary">{history.length}</p>
           <p className="text-xs text-slate-500">
-            {loadingRemote ? "Sunucudan alınıyor" : "Kaydedilen içerik sayısı"}
+            {loadingRemote
+              ? dashboardCopy.cards?.remoteSyncing || t("dashboard.cards.remoteSyncing", "Sunucudan alınıyor")
+              : dashboardCopy.cards?.savedCountLabel || t("dashboard.cards.savedCountLabel", "Kaydedilen içerik sayısı")}
           </p>
         </div>
       </div>
       <div className="space-y-3 rounded-xl border bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between">
-          <p className="font-semibold text-primary">Son aramalar ve yanıtlar</p>
-          <a href="/generate" className="text-sm font-semibold text-blue-600">
-            Yeni içerik oluştur
+          <p className="font-semibold text-primary">
+            {dashboardCopy.recentTitle || t("dashboard.recentTitle", "Son aramalar ve yanıtlar")}
+          </p>
+          <a href={localizedPath("/generate")} className="text-sm font-semibold text-blue-600">
+            {dashboardCopy.recentCta || t("dashboard.recentCta", "Yeni içerik oluştur")}
           </a>
         </div>
         {recentItems.length === 0 ? (
           <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-600">
-            Henüz kayıtlı bir arama yok. Yeni bir ürün girerek sonuçları burada görebilirsiniz.
+            {dashboardCopy.recentEmpty ||
+              t(
+                "dashboard.recentEmpty",
+                "Henüz kayıtlı bir arama yok. Yeni bir ürün girerek sonuçları burada görebilirsiniz.",
+              )}
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
@@ -261,7 +292,8 @@ export default function DashboardPage() {
                 item.output.shortDescription ||
                 item.output.longDescription ||
                 item.output.seoDescription ||
-                "Yanıt içeriği kaydedilemedi";
+                dashboardCopy.previewMissingContent ||
+                  t("dashboard.previewMissingContent", "Yanıt içeriği kaydedilemedi");
 
               const formattedDate = new Date(item.createdAt).toLocaleString("tr-TR", {
                 hour: "2-digit",
@@ -278,7 +310,11 @@ export default function DashboardPage() {
                   className="flex w-full flex-col gap-2 py-3 text-left text-sm text-slate-700 md:flex-row md:items-center md:justify-between hover:bg-slate-50"
                 >
                   <div className="space-y-1">
-                    <p className="font-semibold text-primary">{item.input.title || "Başlık belirtilmedi"}</p>
+                    <p className="font-semibold text-primary">
+                      {item.input.title ||
+                        dashboardCopy.previewMissingTitle ||
+                        t("dashboard.previewMissingTitle", "Başlık belirtilmedi")}
+                    </p>
                     <p className="text-xs text-slate-500">
                       {item.input.platform} • {item.input.language.toUpperCase()} • {item.input.tone}
                     </p>
@@ -318,8 +354,14 @@ export default function DashboardPage() {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase text-slate-400">Başlık</p>
-                <h3 className="text-xl font-bold text-primary">{selected.input.title || "Başlık belirtilmedi"}</h3>
+                <p className="text-xs uppercase text-slate-400">
+                  {dashboardCopy.modal?.titleLabel || t("dashboard.modal.titleLabel", "Başlık")}
+                </p>
+                <h3 className="text-xl font-bold text-primary">
+                  {selected.input.title ||
+                    dashboardCopy.previewMissingTitle ||
+                    t("dashboard.previewMissingTitle", "Başlık belirtilmedi")}
+                </h3>
                 <p className="text-xs text-slate-500">
                   {selected.input.platform} • {selected.input.language.toUpperCase()} • {selected.input.tone}
                 </p>
@@ -328,13 +370,15 @@ export default function DashboardPage() {
                 className="rounded-full border px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-100"
                 onClick={() => setSelected(null)}
               >
-                Close
+                {dashboardCopy.close || t("dashboard.close", "Kapat")}
               </button>
             </div>
             <div className="mt-4 space-y-3 text-sm text-slate-700">
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs uppercase text-slate-400">Uzun açıklama</p>
+                  <p className="text-xs uppercase text-slate-400">
+                    {dashboardCopy.modal?.longLabel || t("dashboard.modal.longLabel", "Uzun açıklama")}
+                  </p>
                   <CopyButton copyKey="modal-long" value={selected.output.longDescription || ""} />
                 </div>
                 <div className="rounded-lg bg-slate-50 p-3">
@@ -343,7 +387,9 @@ export default function DashboardPage() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs uppercase text-slate-400">Kısa açıklama</p>
+                  <p className="text-xs uppercase text-slate-400">
+                    {dashboardCopy.modal?.shortLabel || t("dashboard.modal.shortLabel", "Kısa açıklama")}
+                  </p>
                   <CopyButton copyKey="modal-short" value={selected.output.shortDescription || ""} />
                 </div>
                 <div className="rounded-lg bg-slate-50 p-3">
@@ -353,14 +399,19 @@ export default function DashboardPage() {
               <div className="grid gap-3 md:grid-cols-2">
                 <div className="rounded-lg bg-slate-50 p-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs uppercase text-slate-400">SEO Title</p>
+                    <p className="text-xs uppercase text-slate-400">
+                      {dashboardCopy.modal?.seoTitleLabel || t("dashboard.modal.seoTitleLabel", "SEO Title")}
+                    </p>
                     <CopyButton copyKey="modal-seo-title" value={selected.output.seoTitle || ""} />
                   </div>
                   <p className="font-semibold">{selected.output.seoTitle || "—"}</p>
                 </div>
                 <div className="rounded-lg bg-slate-50 p-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs uppercase text-slate-400">SEO Description</p>
+                    <p className="text-xs uppercase text-slate-400">
+                      {dashboardCopy.modal?.seoDescriptionLabel ||
+                        t("dashboard.modal.seoDescriptionLabel", "SEO Description")}
+                    </p>
                     <CopyButton copyKey="modal-seo-description" value={selected.output.seoDescription || ""} />
                   </div>
                   <p>{selected.output.seoDescription || "—"}</p>
@@ -368,7 +419,9 @@ export default function DashboardPage() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs uppercase text-slate-400">Tags</p>
+                  <p className="text-xs uppercase text-slate-400">
+                    {dashboardCopy.modal?.tagsLabel || t("dashboard.modal.tagsLabel", "Tags")}
+                  </p>
                   <CopyButton copyKey="modal-tags" value={(selected.output.tags || []).join(", ")} />
                 </div>
                 <div className="flex flex-wrap gap-2">

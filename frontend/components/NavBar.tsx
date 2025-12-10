@@ -4,6 +4,9 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AuthUser, clearStoredUser, getStoredUser } from "@/lib/auth";
 import { useTheme } from "next-themes";
+import { LanguageMenu } from "./LanguageMenu";
+import { useLanguage } from "./LanguageProvider";
+import { useLocalizedPath } from "@/hooks/useLocalizedPath";
 
 export function NavBar() {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -12,6 +15,8 @@ export function NavBar() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { theme, setTheme, systemTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { t } = useLanguage();
+  const localizedPath = useLocalizedPath();
 
   useEffect(() => {
     setUser(getStoredUser());
@@ -55,7 +60,7 @@ export function NavBar() {
     <header className="border-b bg-white/80 backdrop-blur py-5">
       <div className="container flex items-center justify-between py-4">
         <div className="flex items-center gap-3">
-          <a href="/" className="flex items-center hover:text-primary" aria-label="CopyBoost AI ana sayfası">
+          <a href={localizedPath("/")} className="flex items-center hover:text-primary" aria-label="CopyBoost AI ana sayfası">
             <Image
               src="/copyboostai-logo.webp"
               alt="CopyBoost AI"
@@ -68,17 +73,17 @@ export function NavBar() {
           </a>
         </div>
         <nav className="hidden items-center gap-4 text-sm text-slate-600 lg:flex">
-            <a href="/" className="hover:text-primary">
-              Ana sayfa
+            <a href={localizedPath("/")} className="hover:text-primary">
+              {t("nav.home", "Ana sayfa")}
             </a>
-            <a href="/dashboard" className="hover:text-primary">
-              Dashboard
+            <a href={localizedPath("/dashboard")} className="hover:text-primary">
+              {t("nav.dashboard", "Dashboard")}
             </a>
-            <a href="/generate" className="hover:text-primary">
-              Üretici
+            <a href={localizedPath("/generate")} className="hover:text-primary">
+              {t("nav.generate", "Üretici")}
             </a>
-            <a href="/billing" className="hover:text-primary">
-              Billing
+            <a href={localizedPath("/billing")} className="hover:text-primary">
+              {t("nav.billing", "Billing")}
             </a>
             {mounted && (
               <button
@@ -109,6 +114,7 @@ export function NavBar() {
                 )}
               </button>
             )}
+            <LanguageMenu variant="desktop" />
             {user ? (
               <div className="relative" ref={menuRef}>
                 <button
@@ -138,19 +144,19 @@ export function NavBar() {
                 {profileMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-lg border bg-white p-2 shadow-lg">
                     <a
-                      href="/settings"
+                      href={localizedPath("/settings")}
                       className="block w-full rounded-md px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
                       onClick={() => setProfileMenuOpen(false)}
                     >
-                      Ayarlar
+                      {t("auth.settings", "Ayarlar")}
                     </a>
                     {user.role === "admin" && (
                       <a
-                        href="/admin"
+                        href={localizedPath("/admin")}
                         className="block w-full rounded-md px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
                         onClick={() => setProfileMenuOpen(false)}
                       >
-                        Admin sayfası
+                        {t("auth.admin", "Admin sayfası")}
                       </a>
                     )}
                     <button
@@ -160,14 +166,14 @@ export function NavBar() {
                         setProfileMenuOpen(false);
                       }}
                     >
-                      Çıkış yap
+                      {t("auth.logout", "Çıkış yap")}
                     </button>
                   </div>
                 )}
               </div>
             ) : (
-              <a href="/auth/login" className="hover:text-primary">
-                Giriş yap
+              <a href={localizedPath("/auth/login")} className="hover:text-primary">
+                {t("auth.login", "Giriş yap")}
               </a>
             )}
           </nav>
@@ -201,6 +207,7 @@ export function NavBar() {
               )}
             </button>
           )}
+          <LanguageMenu variant="mobile" />
           <button
             type="button"
             onClick={() => setMobileNavOpen((prev) => !prev)}
@@ -223,26 +230,26 @@ export function NavBar() {
         <div className="border-t border-slate-200 bg-slate-50 lg:hidden dark:border-slate-800 dark:bg-slate-900 py-5">
           <div className="container space-y-4 py-4 text-sm text-slate-800 dark:text-slate-100">
             <div className="flex flex-col gap-3">
-              <a href="/" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
-                Ana sayfa
+              <a href={localizedPath("/")} className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
+                {t("nav.home", "Ana sayfa")}
               </a>
-              <a href="/dashboard" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
-                Dashboard
+              <a href={localizedPath("/dashboard")} className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
+                {t("nav.dashboard", "Dashboard")}
               </a>
-              <a href="/generate" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
-                Üretici
+              <a href={localizedPath("/generate")} className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
+                {t("nav.generate", "Üretici")}
               </a>
-              <a href="/billing" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
-                Billing
+              <a href={localizedPath("/billing")} className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
+                {t("nav.billing", "Billing")}
               </a>
               {user && (
-                <a href="/settings" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
-                  Ayarlar
+                <a href={localizedPath("/settings")} className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
+                  {t("auth.settings", "Ayarlar")}
                 </a>
               )}
               {user?.role === "admin" && (
-                <a href="/admin" className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
-                  Admin
+                <a href={localizedPath("/admin")} className="rounded-md bg-white px-2 py-2 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => setMobileNavOpen(false)}>
+                  {t("auth.admin", "Admin")}
                 </a>
               )}
             </div>
@@ -252,8 +259,8 @@ export function NavBar() {
                   {initials}
                 </div>
                 <div className="leading-tight">
-                  <div className="font-semibold text-slate-800">{user?.name || user?.email || "Giriş yap"}</div>
-                  <div className="text-[11px] text-slate-500">{user ? user.role || "user" : "Hesabına giriş yap"}</div>
+                  <div className="font-semibold text-slate-100">{user?.name || user?.email || "Giriş yap"}</div>
+                  <div className="text-[11px] text-slate-100">{user ? user.role || "user" : "Hesabına giriş yap"}</div>
                 </div>
               </div>
               {user ? (
@@ -267,8 +274,8 @@ export function NavBar() {
                   Çıkış
                 </button>
               ) : (
-                <a
-                  href="/auth/login"
+              <a
+                href={localizedPath("/auth/login")}
                   className="rounded-md border px-3 py-2 text-sm font-semibold text-primary hover:bg-slate-50 dark:border-slate-800 dark:text-slate-100 dark:hover:bg-slate-800"
                   onClick={() => setMobileNavOpen(false)}
                 >

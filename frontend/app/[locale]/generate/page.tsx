@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { addGenerationToHistory, DAILY_LIMIT, getHistory } from "@/lib/history";
 import { getStoredUser } from "@/lib/auth";
+import { useLanguage } from "@/components/LanguageProvider";
 
 type Profile = {
   limits?: {
@@ -13,17 +14,33 @@ type Profile = {
 };
 
 export default function GeneratePage() {
+  const { t, content, languages, selectedLanguage } = useLanguage();
+  const generateCopy = (content.generate || {}) as Record<string, any>;
   const selectZoneRef = useRef<HTMLFormElement | null>(null);
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const TITLE_MAX_LENGTH = 120;
-  const [form, setForm] = useState({
+  const errorsCopy = (generateCopy.errors || {}) as Record<string, string>;
+  const buttonCopy = (generateCopy.button || {}) as Record<string, string>;
+  const fieldsCopy = (generateCopy.fields || {}) as Record<string, string>;
+  const placeholdersCopy = (generateCopy.placeholders || {}) as Record<string, string>;
+  const usageLabelTemplate = generateCopy.usageLabel || "Bugünkü kullanım: {{count}} / {{limit}}";
+  const usageServerTemplate = generateCopy.usageServerLabel || "(sunucu kalan: {{remaining}})";
+  const copyTooltip = generateCopy.copyTooltip || t("common.copyTooltip", "Sonucu kopyala");
+  const heroTitle = generateCopy.heroTitle || t("generate.heroTitle", "Ürün detaylarını girin ve AI çıktısını alın");
+  const heroDescription =
+    generateCopy.heroDescription ||
+    t(
+      "generate.heroDescription",
+      "CopyBoost AI, Trendyol, Hepsiburada, Amazon, Shopify ve sosyal medya satış kanallarındaki satıcılar için saniyeler içinde SEO uyumlu ürün açıklamaları, meta başlıklar ve etiket önerileri oluşturan bir yapay zekâ aracıdır. Hız, satış artırma ve SEO avantajlarını bir arada sunar.",
+    );
+  const [form, setForm] = useState(() => ({
     title: "",
     category: "giyim",
     platform: "trendyol",
-    language: "tr",
+    language: selectedLanguage?.code || "tr",
     tone: "resmi",
-  });
+  }));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [titleError, setTitleError] = useState<string | null>(null);
@@ -55,6 +72,56 @@ export default function GeneratePage() {
   }>(null);
 
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
+  const categoryOptions = [
+    { value: "giyim", label: generateCopy.categories?.giyim || "👕 Giyim & Moda" },
+    { value: "elektronik", label: generateCopy.categories?.elektronik || "🔌 Elektronik" },
+    { value: "kozmetik", label: generateCopy.categories?.kozmetik || "💄 Kozmetik & Bakım" },
+    { value: "ev-yasam", label: generateCopy.categories?.["ev-yasam"] || "🏠 Ev & Yaşam" },
+    { value: "spor-outdoor", label: generateCopy.categories?.["spor-outdoor"] || "🏃‍♂️ Spor & Outdoor" },
+    { value: "anne-bebek", label: generateCopy.categories?.["anne-bebek"] || "🍼 Anne & Bebek" },
+    { value: "pet", label: generateCopy.categories?.pet || "🐾 Evcil Hayvan" },
+    { value: "market", label: generateCopy.categories?.market || "🛒 Market & Gıda" },
+    { value: "oto-aksesuar", label: generateCopy.categories?.["oto-aksesuar"] || "🚗 Otomotiv & Aksesuar" },
+    { value: "hobi-sanat", label: generateCopy.categories?.["hobi-sanat"] || "🎨 Hobi & Sanat" },
+  ];
+  const platformOptions = [
+    { value: "trendyol", label: generateCopy.platforms?.trendyol || "🧡 Trendyol" },
+    { value: "hepsiburada", label: generateCopy.platforms?.hepsiburada || "🟠 Hepsiburada" },
+    { value: "amazon", label: generateCopy.platforms?.amazon || "🛒 Amazon" },
+    { value: "shopify", label: generateCopy.platforms?.shopify || "🛍️ Shopify" },
+    { value: "etsy", label: generateCopy.platforms?.etsy || "🧵 Etsy" },
+    { value: "aliexpress", label: generateCopy.platforms?.aliexpress || "🌏 AliExpress" },
+    { value: "instagram", label: generateCopy.platforms?.instagram || "📸 Instagram" },
+    { value: "tiktok", label: generateCopy.platforms?.tiktok || "🎵 TikTok" },
+    { value: "facebook", label: generateCopy.platforms?.facebook || "📘 Facebook" },
+    { value: "youtube", label: generateCopy.platforms?.youtube || "▶️ YouTube" },
+    { value: "pinterest", label: generateCopy.platforms?.pinterest || "📌 Pinterest" },
+  ];
+  const languageLabels = (generateCopy.languages || {}) as Record<string, string>;
+  const languageOptions =
+    languages.map((lang) => {
+      const localizedLabel = languageLabels[lang.code];
+      const fallbackLabel =
+        localizedLabel ||
+        [lang.flagIcon, lang.name].filter(Boolean).join(" ").trim() ||
+        lang.code.toUpperCase();
+      return {
+        value: lang.code,
+        label: fallbackLabel,
+      };
+    }) || [];
+  const toneOptions = [
+    { value: "resmi", label: generateCopy.tones?.resmi || "🏛️ Resmi" },
+    { value: "samimi", label: generateCopy.tones?.samimi || "🤗 Samimi" },
+    { value: "eglenceli", label: generateCopy.tones?.eglenceli || "🎉 Eğlenceli" },
+    { value: "teknik", label: generateCopy.tones?.teknik || "🧠 Teknik" },
+    { value: "ikna-edici", label: generateCopy.tones?.["ikna-edici"] || "🧲 İkna Edici" },
+    { value: "hikaye", label: generateCopy.tones?.hikaye || "📖 Hikaye Anlatımı" },
+    { value: "minimal", label: generateCopy.tones?.minimal || "🌿 Minimal" },
+    { value: "premium", label: generateCopy.tones?.premium || "💎 Premium" },
+    { value: "dinamik", label: generateCopy.tones?.dinamik || "⚡ Dinamik" },
+    { value: "acil-kampanya", label: generateCopy.tones?.["acil-kampanya"] || "⏱️ Acil / FOMO" },
+  ];
 
   const effectiveDailyLimit =
     profile?.limits?.dailyLimit !== null && profile?.limits?.dailyLimit !== undefined
@@ -72,6 +139,14 @@ export default function GeneratePage() {
     const count = getHistory().filter((item) => new Date(item.createdAt).toDateString() === today).length;
     setDailyCount(count);
   };
+
+  useEffect(() => {
+    if (!selectedLanguage?.code) return;
+    setForm((prev) => {
+      if (prev.language === selectedLanguage.code) return prev;
+      return { ...prev, language: selectedLanguage.code };
+    });
+  }, [selectedLanguage?.code]);
 
   useEffect(() => {
     syncDailyCount();
@@ -160,7 +235,7 @@ export default function GeneratePage() {
     const sanitized = sanitizeTitleInput(value);
     const cleaned = sanitized.replace(/javascript\s*:/gi, "");
     if (sanitized !== cleaned) {
-      setTitleError("Ürün başlığında JavaScript kodu kullanamazsınız.");
+      setTitleError(noJsMessage);
     } else {
       setTitleError(null);
     }
@@ -178,10 +253,10 @@ export default function GeneratePage() {
         setCopiedKey(key);
         copyTimeoutRef.current = setTimeout(() => setCopiedKey(null), 1500);
       } else {
-        throw new Error("Clipboard desteklenmiyor");
+        throw new Error(clipboardUnsupportedMessage);
       }
     } catch (err) {
-      setError((prev) => prev || "Kopyalama başarısız oldu.");
+      setError((prev) => prev || copyFailedMessage);
     }
   };
 
@@ -191,12 +266,12 @@ export default function GeneratePage() {
     const cleanedTitle = sanitizeTitleInput(form.title);
     const hasJsPayload = /javascript\s*:/i.test(cleanedTitle);
     if (!cleanedTitle.trim()) {
-      setError("Lütfen geçerli bir ürün başlığı girin.");
+      setError(missingTitleMessage);
       setForm((prev) => ({ ...prev, title: "" }));
       return;
     }
     if (hasJsPayload) {
-      setError("Ürün başlığında JavaScript kodu kullanamazsınız.");
+      setError(noJsMessage);
       setForm((prev) => ({ ...prev, title: cleanedTitle.replace(/javascript\s*:/gi, "") }));
       return;
     }
@@ -209,10 +284,12 @@ export default function GeneratePage() {
     }
 
     if (limitReached) {
-      const message =
+      const template =
         serverLimitReached && serverRemaining !== null
-          ? `Günlük hakkınız doldu. Kalan: 0 / ${effectiveDailyLimit}`
-          : `Günlük ${effectiveDailyLimit} üretim hakkınız doldu. Yarın tekrar deneyin.`;
+          ? generateCopy.limitReachedServer || "Günlük hakkınız doldu. Kalan: 0 / {{limit}}"
+          : generateCopy.limitReached ||
+            "Günlük {{limit}} üretim hakkınız doldu. Yarın tekrar deneyin.";
+      const message = template.replace("{{limit}}", String(effectiveDailyLimit));
       setError(message);
       return;
     }
@@ -233,7 +310,7 @@ export default function GeneratePage() {
       });
 
       if (!res.ok) {
-        let message = `API ${res.status} hatası`;
+        let message = `${errorsCopy.apiErrorPrefix || t("generate.errors.apiErrorPrefix", "API hatası")} ${res.status}`;
         try {
           const errorBody = await res.json();
           if (typeof errorBody?.message === "string") {
@@ -285,7 +362,7 @@ export default function GeneratePage() {
         }
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Bilinmeyen hata";
+      const message = err instanceof Error ? err.message : unknownErrorMessage;
       setError(message);
     } finally {
       setLoading(false);
@@ -372,18 +449,19 @@ export default function GeneratePage() {
       onClick={() => handleCopy(copyKey, value)}
       disabled={!value || !value.toString().trim()}
       className="flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
-      title={copiedKey === copyKey ? "Kopyalandı" : "Sonucu kopyala"}
+      title={copiedKey === copyKey ? t("common.copied", "Kopyalandı") : copyTooltip}
     >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
       </svg>
-      <span>{copiedKey === copyKey ? "Kopyalandı" : "Kopyala"}</span>
+      <span>{copiedKey === copyKey ? t("common.copied", "Kopyalandı") : t("common.copy", "Kopyala")}</span>
     </button>
   );
 
-  const seoTitleText = result?.output?.seo?.title || "Meta title";
-  const seoDescriptionText = result?.output?.seo?.description || "Meta description placeholder.";
+  const seoTitleText = result?.output?.seo?.title || placeholdersCopy.seoTitle || "Meta title";
+  const seoDescriptionText =
+    result?.output?.seo?.description || placeholdersCopy.seoDescription || "Meta description placeholder.";
   const seoCopyText = [result?.output?.seo?.title, result?.output?.seo?.description].filter(Boolean).join("\n");
   const tagsList = result?.output?.tags || ["organik", "pamuk", "tişört", "sürdürülebilir"];
   const tagsCopyText = (result?.output?.tags || []).join(", ");
@@ -391,13 +469,11 @@ export default function GeneratePage() {
   return (
     <div className="container py-10 space-y-6">
       <div className="max-w-3xl space-y-2">
-        <h1 className="text-3xl font-bold text-primary mt-5">Ürün detaylarını girin ve AI çıktısını alın</h1>
-        <p className="text-slate-600">
-          CopyBoost AI, Trendyol, Hepsiburada, Amazon, Shopify ve sosyal medya satış kanallarındaki satıcılar için saniyeler içinde SEO uyumlu ürün açıklamaları, meta başlıklar ve etiket önerileri oluşturan bir yapay zekâ aracıdır. Hız, satış artırma ve SEO avantajlarını bir arada sunar.
-        </p>
+        <h1 className="text-3xl font-bold text-primary mt-5">{heroTitle}</h1>
+        <p className="text-slate-600">{heroDescription}</p>
         {limitReached && (
           <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            Günlük {effectiveDailyLimit} üretim hakkınız doldu. Yarın tekrar deneyebilir veya plan yükseltebilirsiniz.
+            {getLimitMessage()}
           </div>
         )}
       </div>
@@ -405,76 +481,37 @@ export default function GeneratePage() {
         <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border bg-white p-6 shadow-sm" ref={selectZoneRef}>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700" htmlFor="title">
-              Ürün başlığı
+              {generateCopy.titleLabel || t("generate.titleLabel", "Ürün başlığı")}
             </label>
             <input
               id="title"
               type="text"
-              placeholder="Örn: Organik pamuk tişört"
+              placeholder={generateCopy.titlePlaceholder || t("generate.titlePlaceholder", "Örn: Organik pamuk tişört")}
               className="w-full rounded-lg border px-3 py-2 outline-none focus:border-primary"
               value={form.title}
               onChange={(e) => handleTitleChange(e.target.value)}
               maxLength={TITLE_MAX_LENGTH}
             />
             <div className="flex items-center justify-between text-xs">
-              {titleError ? <span className="text-red-600">{titleError}</span> : <span className="text-slate-500">JavaScript kodu kabul edilmez</span>}
+              {titleError ? (
+                <span className="text-red-600">{titleError}</span>
+              ) : (
+                <span className="text-slate-500">
+                  {generateCopy.titleHint || t("generate.titleHint", "JavaScript kodu kabul edilmez")}
+                </span>
+              )}
               <span className="text-slate-500">
                 {form.title.length}/{TITLE_MAX_LENGTH}
               </span>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {renderSelectField("category", "Kategori", form.category, [
-              { value: "giyim", label: "👕 Giyim & Moda" },
-              { value: "elektronik", label: "🔌 Elektronik" },
-              { value: "kozmetik", label: "💄 Kozmetik & Bakım" },
-              { value: "ev-yasam", label: "🏠 Ev & Yaşam" },
-              { value: "spor-outdoor", label: "🏃‍♂️ Spor & Outdoor" },
-              { value: "anne-bebek", label: "🍼 Anne & Bebek" },
-              { value: "pet", label: "🐾 Evcil Hayvan" },
-              { value: "market", label: "🛒 Market & Gıda" },
-              { value: "oto-aksesuar", label: "🚗 Otomotiv & Aksesuar" },
-              { value: "hobi-sanat", label: "🎨 Hobi & Sanat" },
-            ])}
-            {renderSelectField("platform", "Platform", form.platform, [
-              { value: "trendyol", label: "🧡 Trendyol" },
-              { value: "hepsiburada", label: "🟠 Hepsiburada" },
-              { value: "amazon", label: "🛒 Amazon" },
-              { value: "shopify", label: "🛍️ Shopify" },
-              { value: "etsy", label: "🧵 Etsy" },
-              { value: "aliexpress", label: "🌏 AliExpress" },
-              { value: "instagram", label: "📸 Instagram" },
-              { value: "tiktok", label: "🎵 TikTok" },
-              { value: "facebook", label: "📘 Facebook" },
-              { value: "youtube", label: "▶️ YouTube" },
-              { value: "pinterest", label: "📌 Pinterest" },
-            ])}
+            {renderSelectField("category", generateCopy.categoryLabel || t("generate.categoryLabel", "Kategori"), form.category, categoryOptions)}
+            {renderSelectField("platform", generateCopy.platformLabel || t("generate.platformLabel", "Platform"), form.platform, platformOptions)}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {renderSelectField("language", "Hedef dil", form.language, [
-              { value: "tr", label: "🇹🇷 Türkçe" },
-              { value: "en", label: "🇺🇸 İngilizce" },
-              { value: "de", label: "🇩🇪 Almanca" },
-              { value: "fr", label: "🇫🇷 Fransızca" },
-              { value: "es", label: "🇪🇸 İspanyolca" },
-              { value: "it", label: "🇮🇹 İtalyanca" },
-              { value: "ar", label: "🇸🇦 Arapça" },
-              { value: "ru", label: "🇷🇺 Rusça" },
-              { value: "zh", label: "🇨🇳 Çince" },
-              { value: "nl", label: "🇳🇱 Flemenkçe" },
-            ])}
-            {renderSelectField("tone", "Ton", form.tone, [
-              { value: "resmi", label: "🏛️ Resmi" },
-              { value: "samimi", label: "🤗 Samimi" },
-              { value: "eglenceli", label: "🎉 Eğlenceli" },
-              { value: "teknik", label: "🧠 Teknik" },
-              { value: "ikna-edici", label: "🧲 İkna Edici" },
-              { value: "hikaye", label: "📖 Hikaye Anlatımı" },
-              { value: "minimal", label: "🌿 Minimal" },
-              { value: "premium", label: "💎 Premium" },
-              { value: "dinamik", label: "⚡ Dinamik" },
-              { value: "acil-kampanya", label: "⏱️ Acil / FOMO" },
-            ])}
+            {renderSelectField("language", generateCopy.languageLabel || t("generate.languageLabel", "Hedef dil"), form.language, languageOptions)}
+            {renderSelectField("tone", generateCopy.toneLabel || t("generate.toneLabel", "Ton"), form.tone, toneOptions)}
           </div>
           <button
             type="submit"
@@ -482,46 +519,66 @@ export default function GeneratePage() {
             disabled={loading || limitReached || loadingProfile}
           >
             {loading
-              ? "Üretiliyor..."
+              ? buttonCopy.loading || t("generate.button.loading", "Üretiliyor...")
               : loadingProfile
-                ? "Limit kontrol ediliyor..."
-                : "Üret"}
+                ? buttonCopy.checking || t("generate.button.checking", "Limit kontrol ediliyor...")
+                : buttonCopy.default || t("generate.button.default", "Üret")}
           </button>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <p className="text-xs text-slate-500">
-            Bugünkü kullanım: {dailyCount} / {effectiveDailyLimit}{" "}
-            {serverRemaining !== null ? `(sunucu kalan: ${Math.max(serverRemaining, 0)})` : ""}
+            {usageLabelTemplate
+              .replace("{{count}}", String(dailyCount))
+              .replace("{{limit}}", String(effectiveDailyLimit))}{" "}
+            {serverRemaining !== null
+              ? usageServerTemplate.replace("{{remaining}}", String(Math.max(serverRemaining, 0)))
+              : ""}
           </p>
         </form>
         <div className="space-y-4 rounded-xl border bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-slate-700">Sonuçlar</p>
+            <p className="text-sm font-semibold text-slate-700">
+              {generateCopy.resultsTitle || t("generate.resultsTitle", "Sonuçlar")}
+            </p>
             <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-              {loading ? "İstek gönderiliyor" : result ? "Hazır" : "Taslak"}
+              {loading
+                ? generateCopy.resultStatus?.sending || t("generate.resultStatus.sending", "İstek gönderiliyor")
+                : result
+                  ? generateCopy.resultStatus?.ready || t("generate.resultStatus.ready", "Hazır")
+                  : generateCopy.resultStatus?.draft || t("generate.resultStatus.draft", "Taslak")}
             </span>
           </div>
           <div className="space-y-3 text-sm text-slate-700">
             <div>
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase text-slate-400">Uzun açıklama</p>
+                <p className="text-xs uppercase text-slate-400">
+                  {fieldsCopy.long || t("generate.fields.long", "Uzun açıklama")}
+                </p>
                 <CopyButton copyKey="longDescription" value={result?.output?.longDescription} />
               </div>
               <div className="rounded-lg bg-slate-50 p-3">
-                {result?.output?.longDescription || "Başlatmak için ürünü doldurun. API yanıtı burada görünecek."}
+                {result?.output?.longDescription ||
+                  placeholdersCopy.long ||
+                  t("generate.placeholders.long", "Başlatmak için ürünü doldurun. API yanıtı burada görünecek.")}
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase text-slate-400">Kısa açıklama</p>
+                <p className="text-xs uppercase text-slate-400">
+                  {fieldsCopy.short || t("generate.fields.short", "Kısa açıklama")}
+                </p>
                 <CopyButton copyKey="shortDescription" value={result?.output?.shortDescription} />
               </div>
               <div className="rounded-lg bg-slate-50 p-3">
-                {result?.output?.shortDescription || "Öne çıkan madde ve bullet point örnekleri."}
+                {result?.output?.shortDescription ||
+                  placeholdersCopy.short ||
+                  t("generate.placeholders.short", "Öne çıkan madde ve bullet point örnekleri.")}
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase text-slate-400">SEO meta</p>
+                <p className="text-xs uppercase text-slate-400">
+                  {fieldsCopy.seoMeta || t("generate.fields.seoMeta", "SEO meta")}
+                </p>
                 <CopyButton copyKey="seoMeta" value={seoCopyText} />
               </div>
               <div className="rounded-lg bg-slate-50 p-3 space-y-1">
@@ -531,17 +588,15 @@ export default function GeneratePage() {
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase text-slate-400">Tags / keywords</p>
+                <p className="text-xs uppercase text-slate-400">
+                  {fieldsCopy.tags || t("generate.fields.tags", "Tags / keywords")}
+                </p>
                 <CopyButton copyKey="tags" value={tagsCopyText || tagsList.join(", ")} />
               </div>
-              <div className="rounded-lg bg-slate-50 p-3">
-                {tagsList.join(", ")}
-              </div>
+              <div className="rounded-lg bg-slate-50 p-3">{tagsList.join(", ")}</div>
             </div>
             {result?.info && (
-              <div className="rounded-lg bg-blue-50 p-3 text-blue-700 text-xs">
-                {result.info}
-              </div>
+              <div className="rounded-lg bg-blue-50 p-3 text-blue-700 text-xs">{result.info}</div>
             )}
           </div>
         </div>

@@ -57,3 +57,22 @@ CREATE TABLE IF NOT EXISTS usage_logs (
 );
 CREATE INDEX IF NOT EXISTS idx_usage_logs_user_id ON usage_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_usage_logs_created_at ON usage_logs(created_at);
+
+-- Language files
+CREATE TABLE IF NOT EXISTS language_files (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  code VARCHAR(16) UNIQUE NOT NULL,
+  name VARCHAR(128) NOT NULL,
+  flag_icon VARCHAR(8),
+  is_default BOOLEAN NOT NULL DEFAULT FALSE,
+  content JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+INSERT INTO language_files (code, name, flag_icon, is_default, content)
+VALUES
+  ('tr', 'Türkçe', '🇹🇷', TRUE, '{"heroTitle":"Ürün detaylarını girin ve AI çıktısını alın","cta":"Hemen Başla"}'),
+  ('en', 'English', '🇺🇸', FALSE, '{"heroTitle":"Enter product details and get AI output","cta":"Get Started"}'),
+  ('de', 'Deutsch', '🇩🇪', FALSE, '{"heroTitle":"Produktdetails eingeben und KI-Ergebnis erhalten","cta":"Jetzt starten"}')
+ON CONFLICT (code) DO NOTHING;
