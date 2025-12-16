@@ -7,7 +7,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https:/
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  const routes = ["/", "/generate", "/dashboard", "/billing"];
+  const routes = ["/", "/generate", "/dashboard", "/billing", "/cookie-policy"];
 
   const localizedRoutes = SUPPORTED_LANG_CODES.flatMap((code) =>
     routes.map((route) => {

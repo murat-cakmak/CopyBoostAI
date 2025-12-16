@@ -4,6 +4,7 @@ import { NavBar } from "@/components/NavBar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { AppFooter } from "@/components/AppFooter";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { isSupportedLocale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
           <main className="flex-1">{children}</main>
           <AppFooter />
         </div>
+        <CookieConsentBanner />
       </ThemeProvider>
     </LanguageProvider>
   );

@@ -210,6 +210,8 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
         ar: "🇸🇦 Arapça",
         ru: "🇷🇺 Rusça",
         zh: "🇨🇳 Çince",
+        ko: "🇰🇷 Korece",
+        ja: "🇯🇵 Japonca",
         nl: "🇳🇱 Flemenkçe",
         pt: "🇵🇹 Portekizce",
         el: "🇬🇷 Yunanca",
@@ -267,6 +269,17 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       rights: "Tüm hakları saklıdır.",
       brand: "CopyBoost AI",
       linkLabel: "Murat Çakmak",
+      cookiePolicyLink: "Çerez Politikası",
+    },
+    legal: {
+      cookiePolicy: {
+        title: "Çerez Politikası",
+        paragraphs: [
+          "Web sitesi trafiğini analiz etmek ve web sitesi deneyiminizi optimize etmek amacıyla çerezler kullanıyoruz.",
+          "Çerez kullanımımızı kabul ettiğinizde, verileriniz tüm diğer kullanıcı verileriyle birlikte derlenir.",
+        ],
+        acceptButton: "Kabul Et",
+      },
     },
     settings: {
       badge: "Profil & Güvenlik",
@@ -520,6 +533,8 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
         ar: "🇸🇦 Arabic",
         ru: "🇷🇺 Russian",
         zh: "🇨🇳 Chinese",
+        ko: "🇰🇷 Korean",
+        ja: "🇯🇵 Japanese",
         nl: "🇳🇱 Dutch",
         pt: "🇵🇹 Portuguese",
         el: "🇬🇷 Greek",
@@ -577,6 +592,17 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       rights: "All rights reserved.",
       brand: "CopyBoost AI",
       linkLabel: "Murat Çakmak",
+      cookiePolicyLink: "Cookie Policy",
+    },
+    legal: {
+      cookiePolicy: {
+        title: "Cookie Policy",
+        paragraphs: [
+          "We use cookies to analyze traffic and optimize your on-site experience.",
+          "When you accept our cookie usage, your data is aggregated with all other user data.",
+        ],
+        acceptButton: "Accept",
+      },
     },
     settings: {
       badge: "Profile & Security",
@@ -888,6 +914,16 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       brand: "CopyBoost AI",
       linkLabel: "Murat Çakmak",
     },
+    legal: {
+      cookiePolicy: {
+        title: "Cookie-Richtlinie",
+        paragraphs: [
+          "Wir verwenden Cookies, um den Website-Traffic zu analysieren und Ihr Nutzungserlebnis zu optimieren.",
+          "Wenn Sie die Verwendung von Cookies akzeptieren, werden Ihre Daten gemeinsam mit denen anderer Nutzer aggregiert.",
+        ],
+        acceptButton: "Akzeptieren",
+      },
+    },
     settings: {
       badge: "Profil & Sicherheit",
       title: "Kontoeinstellungen",
@@ -1134,6 +1170,8 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
         "ar": "🇸🇦 Arabe",
         "ru": "🇷🇺 Russe",
         "zh": "🇨🇳 Chinois",
+        "ko": "🇰🇷 Coréen",
+        "ja": "🇯🇵 Japonais",
         "nl": "🇳🇱 Néerlandais",
         "pt": "🇵🇹 Portugais",
         "el": "🇬🇷 Grec",
@@ -1191,6 +1229,16 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       "rights": "Tous droits réservés.",
       "brand": "CopyBoost AI",
       "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Politique de cookies",
+        "paragraphs": [
+          "Nous utilisons des cookies pour analyser le trafic du site et optimiser votre expérience.",
+          "En acceptant notre utilisation des cookies, vos données sont agrégées avec celles des autres utilisateurs."
+        ],
+        "acceptButton": "Accepter"
+      }
     },
     "settings": {
       "badge": "Profil & Sécurité",
@@ -1436,6 +1484,8 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
         "ar": "🇸🇦 العربية",
         "ru": "🇷🇺 الروسية",
         "zh": "🇨🇳 الصينية",
+        "ko": "🇰🇷 الكورية",
+        "ja": "🇯🇵 اليابانية",
         "nl": "🇳🇱 الهولندية",
         "pt": "🇵🇹 البرتغالية",
         "el": "🇬🇷 اليونانية",
@@ -1493,6 +1543,16 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       "rights": "جميع الحقوق محفوظة.",
       "brand": "CopyBoost AI",
       "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "سياسة ملفات تعريف الارتباط",
+        "paragraphs": [
+          "نستخدم ملفات تعريف الارتباط لتحليل حركة الزيارات وتحسين تجربتك على الموقع.",
+          "عند قبول استخدامنا لملفات تعريف الارتباط، يتم تجميع بياناتك مع بيانات جميع المستخدمين الآخرين."
+        ],
+        "acceptButton": "أوافق"
+      }
     },
     "settings": {
       "badge": "الملف الشخصي والأمان",
@@ -1738,6 +1798,8 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
         "ar": "🇸🇦 Árabe",
         "ru": "🇷🇺 Ruso",
         "zh": "🇨🇳 Chino",
+        "ko": "🇰🇷 Coreano",
+        "ja": "🇯🇵 Japonés",
         "nl": "🇳🇱 Neerlandés",
         "pt": "🇵🇹 Portugués",
         "el": "🇬🇷 Griego",
@@ -1795,6 +1857,16 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       "rights": "Todos los derechos reservados.",
       "brand": "CopyBoost AI",
       "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Política de cookies",
+        "paragraphs": [
+          "Usamos cookies para analizar el tráfico y optimizar tu experiencia en el sitio.",
+          "Cuando aceptas nuestro uso de cookies, tus datos se agregan junto con los del resto de usuarios."
+        ],
+        "acceptButton": "Aceptar"
+      }
     },
     "settings": {
       "badge": "Perfil y seguridad",
@@ -2040,6 +2112,8 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
         "ar": "🇸🇦 Árabe",
         "ru": "🇷🇺 Russo",
         "zh": "🇨🇳 Chinês",
+        "ko": "🇰🇷 Coreano",
+        "ja": "🇯🇵 Japonês",
         "nl": "🇳🇱 Neerlandês",
         "pt": "🇵🇹 Português",
         "el": "🇬🇷 Grego",
@@ -2097,6 +2171,16 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       "rights": "Todos os direitos reservados.",
       "brand": "CopyBoost AI",
       "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Política de Cookies",
+        "paragraphs": [
+          "Usamos cookies para analisar o tráfego e otimizar a sua experiência no site.",
+          "Ao aceitar o uso de cookies, os seus dados são agregados aos dados dos demais utilizadores."
+        ],
+        "acceptButton": "Aceitar"
+      }
     },
     "settings": {
       "badge": "Perfil & Segurança",
@@ -2292,6 +2376,16 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       "rights": "Όλα τα δικαιώματα διατηρούνται.",
       "brand": "CopyBoost AI"
     },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Πολιτική Cookies",
+        "paragraphs": [
+          "Χρησιμοποιούμε cookies για να αναλύουμε την επισκεψιμότητα και να βελτιστοποιούμε την εμπειρία σας.",
+          "Όταν αποδέχεστε τη χρήση cookies, τα δεδομένα σας συγκεντρώνονται με τα δεδομένα όλων των χρηστών."
+        ],
+        "acceptButton": "Αποδοχή"
+      }
+    },
     "settings": {
       "title": "Ρυθμίσεις λογαριασμού",
       "profileCard": {
@@ -2390,6 +2484,16 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       "rights": "Всички права запазени.",
       "brand": "CopyBoost AI"
     },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Политика за бисквитките",
+        "paragraphs": [
+          "Използваме бисквитки, за да анализираме трафика и да оптимизираме вашето изживяване на сайта.",
+          "Когато приемете използването на бисквитки, вашите данни се обобщават с данните на останалите потребители."
+        ],
+        "acceptButton": "Приемам"
+      }
+    },
     "settings": {
       "title": "Настройки на акаунта",
       "profileCard": {
@@ -2479,11 +2583,1277 @@ export const defaultLanguageContents: Record<string, TranslationContent> = {
       "rights": "Bütün hüquqlar qorunur.",
       "brand": "CopyBoost AI"
     },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Kukilər Siyasəti",
+        "paragraphs": [
+          "Vebsayt trafikini təhlil etmək və istifadəçi təcrübənizi optimallaşdırmaq üçün kukilərdən istifadə edirik.",
+          "Kukilərimizi qəbul etdikdə, məlumatlarınız digər istifadəçilərin məlumatları ilə birlikdə toplanır."
+        ],
+        "acceptButton": "Qəbul et"
+      }
+    },
     "settings": {
       "title": "Hesab parametrləri",
       "profileCard": {
         "title": "Profil məlumatları",
         "saveButton": "Yadda saxla"
+      }
+    }
+  },
+  zh: {
+    "nav": {
+      "home": "首页",
+      "dashboard": "控制面板",
+      "generate": "内容生成器",
+      "billing": "订阅与结算"
+    },
+    "auth": {
+      "login": "登录",
+      "settings": "设置",
+      "admin": "管理页面",
+      "logout": "退出登录"
+    },
+    "hero": {
+      "title": "使用 CopyBoost AI 在数秒内生成商品描述",
+      "description": "为 Trendyol、Amazon、Shopify 等平台打造 SEO 友好的描述、Meta 标题和标签。订阅模式助力安全扩展。",
+      "primaryCta": "免费试用",
+      "secondaryCtaLoggedIn": "继续生成内容",
+      "secondaryCtaLoggedOut": "开始创建",
+      "sampleHeading": "示例输出",
+      "sampleProductLabel": "商品",
+      "sampleLongLabel": "长描述",
+      "sampleMetaTitle": "Meta 标题",
+      "sampleMetaDescription": "Meta 描述",
+      "sampleProductValue": "有机棉 T 恤",
+      "sampleLongText": "透气面料与极简设计，适合日常穿搭。100% GOTS 认证有机棉，对敏感肌肤也温和。",
+      "sampleMetaTitleValue": "有机棉 T 恤 | 清爽夏日",
+      "sampleMetaDescriptionValue": "柔软可持续棉料，快速发货。",
+      "sampleTags": ["有机", "棉质", "可持续", "中性"]
+    },
+    "plan": {
+      "planLabel": "套餐",
+      "dailyQuota": "每日额度",
+      "dailyRemaining": "今日剩余",
+      "dailyUsed": "今日使用",
+      "monthlyUsage": "本月使用",
+      "periodRemaining": "周期剩余",
+      "unspecified": "未指定",
+      "updating": "更新中...",
+      "loading": "加载中..."
+    },
+    "features": [
+      {
+        "title": "秒级生成内容",
+        "description": "输入商品标题，即可获得长短描述。"
+      },
+      {
+        "title": "多平台适配",
+        "description": "自动匹配 Trendyol、Amazon、Shopify 等平台格式。"
+      },
+      {
+        "title": "质量稳定",
+        "description": "每个 SKU 都拥有一致的 SEO 友好内容。"
+      },
+      {
+        "title": "节省时间",
+        "description": "把写文案的时间留给运营和增长。"
+      }
+    ],
+    "common": {
+      "loading": "加载中...",
+      "redirecting": "正在跳转...",
+      "copy": "复制",
+      "copied": "已复制",
+      "copyTooltip": "复制结果",
+      "close": "关闭",
+      "save": "保存",
+      "saving": "保存中...",
+      "delete": "删除",
+      "deleting": "删除中...",
+      "confirm": "确认",
+      "cancel": "取消",
+      "edit": "编辑",
+      "success": "成功",
+      "error": "错误"
+    },
+    "authPages": {
+      "login": {
+        "badge": "登录",
+        "heading": "登录 CopyBoost AI 帐户",
+        "description": "请输入邮箱与密码。",
+        "emailPlaceholder": "邮箱",
+        "passwordPlaceholder": "密码",
+        "submit": "登录",
+        "loading": "正在验证...",
+        "requiredError": "邮箱和密码为必填项。",
+        "genericError": "发生未知错误。",
+        "failed": "登录失败",
+        "success": "登录成功。",
+        "google": "使用 Google 登录",
+        "switchText": "还没有帐号？",
+        "switchLink": "立即注册"
+      },
+      "register": {
+        "badge": "注册",
+        "heading": "免费开始使用",
+        "description": "免费版每日 5 次生成，Pro 版不限量。",
+        "namePlaceholder": "姓名",
+        "emailPlaceholder": "邮箱",
+        "passwordPlaceholder": "密码（至少 8 位）",
+        "submit": "创建帐号",
+        "loading": "正在创建...",
+        "success": "注册成功！现在即可登录。",
+        "requiredError": "邮箱和密码为必填项。",
+        "genericError": "发生未知错误。",
+        "failed": "注册失败",
+        "google": "使用 Google 注册",
+        "switchText": "已经有帐号？",
+        "switchLink": "前往登录"
+      }
+    },
+    "dashboard": {
+      "title": "使用情况总览",
+      "description": "跟踪每个提示与 AI 回复，全面掌握内容生成表现。",
+      "serverSync": "正在从服务器获取历史记录...",
+      "cards": {
+        "totalContentLabel": "生成内容总数",
+        "savedCountLabel": "已保存数量",
+        "recentUsageTitle": "今日使用",
+        "planTitle": "套餐",
+        "newContentCta": "新建内容",
+        "remoteSyncing": "服务器同步中"
+      },
+      "recentTitle": "最近的提示与结果",
+      "recentCta": "创建新内容",
+      "recentEmpty": "暂未保存任何提示。创建一个商品即可在此查看结果。",
+      "previewMissingTitle": "未提供标题",
+      "previewMissingContent": "无法显示内容",
+      "copyTooltip": "复制结果",
+      "modal": {
+        "titleLabel": "标题",
+        "longLabel": "长描述",
+        "shortLabel": "短描述",
+        "seoTitleLabel": "SEO 标题",
+        "seoDescriptionLabel": "SEO 描述",
+        "tagsLabel": "标签"
+      },
+      "close": "关闭"
+    },
+    "billing": {
+      "title": "管理订阅",
+      "description": "Stripe Checkout 与客户门户的占位内容。未来将在此展示套餐与账单。",
+      "planTitle": "当前套餐",
+      "planDescription": "每日 5 条内容",
+      "upgradeButton": "升级到 Pro",
+      "billingTitle": "结算",
+      "billingDescription": "接入 Stripe 客户门户后，您可以更新卡信息并查看发票。",
+      "portalButton": "打开 Stripe 门户"
+    },
+    "generate": {
+      "heroTitle": "输入商品信息并获取 AI 输出",
+      "heroDescription": "为电商和社交渠道卖家提供秒级 SEO 描述、Meta 标题与标签，帮助提升转化。",
+      "limitReached": "您今日的 {{limit}} 次额度已用完。可明天再试或升级套餐。",
+      "limitReachedServer": "今日额度已满。剩余：0 / {{limit}}",
+      "titleLabel": "商品标题",
+      "titlePlaceholder": "如：有机棉 T 恤",
+      "titleHint": "禁止输入 JavaScript 代码",
+      "categoryLabel": "类别",
+      "platformLabel": "平台",
+      "languageLabel": "目标语言",
+      "toneLabel": "语气",
+      "categories": {
+        "giyim": "👕 服饰与时尚",
+        "elektronik": "🔌 电子产品",
+        "kozmetik": "💄 美妆个护",
+        "ev-yasam": "🏠 家居生活",
+        "spor-outdoor": "🏃‍♂️ 运动户外",
+        "anne-bebek": "🍼 母婴用品",
+        "pet": "🐾 宠物用品",
+        "market": "🛒 超市食品",
+        "oto-aksesuar": "🚗 汽车与配件",
+        "hobi-sanat": "🎨 爱好与艺术"
+      },
+      "platforms": {
+        "trendyol": "🧡 Trendyol",
+        "hepsiburada": "🟠 Hepsiburada",
+        "amazon": "🛒 Amazon",
+        "shopify": "🛍️ Shopify",
+        "etsy": "🧵 Etsy",
+        "aliexpress": "🌏 AliExpress",
+        "instagram": "📸 Instagram",
+        "tiktok": "🎵 TikTok",
+        "facebook": "📘 Facebook",
+        "youtube": "▶️ YouTube",
+        "pinterest": "📌 Pinterest"
+      },
+      "languages": {
+        "tr": "🇹🇷 土耳其语",
+        "en": "🇺🇸 英语",
+        "de": "🇩🇪 德语",
+        "fr": "🇫🇷 法语",
+        "es": "🇪🇸 西班牙语",
+        "it": "🇮🇹 意大利语",
+        "ar": "🇸🇦 阿拉伯语",
+        "ru": "🇷🇺 俄语",
+        "zh": "🇨🇳 中文",
+        "ko": "🇰🇷 韩语",
+        "ja": "🇯🇵 日语",
+        "nl": "🇳🇱 荷兰语",
+        "pt": "🇵🇹 葡萄牙语",
+        "el": "🇬🇷 希腊语",
+        "bg": "🇧🇬 保加利亚语",
+        "az": "🇦🇿 阿塞拜疆语"
+      },
+      "tones": {
+        "resmi": "🏛️ 正式",
+        "samimi": "🤗 亲切",
+        "eglenceli": "🎉 有趣",
+        "teknik": "🧠 技术",
+        "ikna-edici": "🧲 说服力",
+        "hikaye": "📖 叙事",
+        "minimal": "🌿 极简",
+        "premium": "💎 高端",
+        "dinamik": "⚡ 充满活力",
+        "acil-kampanya": "⏱️ 紧迫 / FOMO"
+      },
+      "button": {
+        "default": "生成",
+        "loading": "生成中...",
+        "checking": "检查额度..."
+      },
+      "errors": {
+        "missingTitle": "请输入有效的商品标题。",
+        "noJavascript": "标题中不能包含 JavaScript。",
+        "clipboardUnsupported": "浏览器不支持剪贴板",
+        "copyFailed": "复制失败。",
+        "apiErrorPrefix": "API 错误",
+        "unknown": "未知错误"
+      },
+      "usageLabel": "今日用量：{{count}} / {{limit}}",
+      "usageServerLabel": "(服务器剩余：{{remaining}})",
+      "resultsTitle": "结果",
+      "resultStatus": {
+        "sending": "发送中",
+        "ready": "已完成",
+        "draft": "草稿"
+      },
+      "fields": {
+        "long": "长描述",
+        "short": "短描述",
+        "seoMeta": "SEO 元数据",
+        "tags": "标签 / 关键词"
+      },
+      "placeholders": {
+        "long": "填写商品即可开始，API 响应会显示在此处。",
+        "short": "亮点和 bullet 将展示在这里。",
+        "seoTitle": "Meta 标题",
+        "seoDescription": "Meta 描述占位。"
+      }
+    },
+    "footer": {
+      "tagline": "几秒内生成 SEO 友好的商品文案。",
+      "rights": "版权所有。",
+      "brand": "CopyBoost AI",
+      "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Cookie 政策",
+        "paragraphs": [
+          "我们使用 Cookie 分析网站流量并优化体验。",
+          "接受 Cookie 后，您的数据会与其他用户数据一起汇总处理。"
+        ],
+        "acceptButton": "接受"
+      }
+    },
+    "settings": {
+      "badge": "个人资料与安全",
+      "title": "账户设置",
+      "description": "更新信息并修改密码。出于安全考虑，邮箱不可更改。",
+      "statusBadge": "已登录",
+      "profileCard": {
+        "title": "个人资料",
+        "subtitle": "可更新姓名，邮箱保持不变。",
+        "nameLabel": "姓名",
+        "namePlaceholder": "例如：李华",
+        "emailLabel": "邮箱（不可更改）",
+        "saveButton": "保存资料"
+      },
+      "passwordCard": {
+        "title": "密码与安全",
+        "subtitle": "设置强密码，修改前需验证当前密码。",
+        "currentLabel": "当前密码",
+        "newLabel": "新密码",
+        "chipLength": "至少 8 位",
+        "chipEmail": "邮箱固定",
+        "saveButton": "更新密码",
+        "savingText": "正在更新密码..."
+      },
+      "usageCard": {
+        "title": "套餐与用量",
+        "planLabel": "套餐",
+        "dailyLimit": "每日额度",
+        "dailyUsed": "今日使用",
+        "remaining": "剩余",
+        "monthlyUsage": "本月使用",
+        "unlimited": "不限量",
+        "empty": "-"
+      },
+      "securityCard": {
+        "title": "安全提示",
+        "body": "邮箱无法修改，更新密码需要验证。请勿与他人共享登录信息。"
+      },
+      "apiCard": {
+        "title": "API 密钥",
+        "description": "可用时将在此显示专属密钥。访问受限，如需帮助请联系 support@copyboost.ai。",
+        "placeholder": "sk-live-*************"
+      },
+      "states": {
+        "loading": "加载中...",
+        "loginRequired": "需要登录才能管理设置，正在跳转..."
+      }
+    }
+  },
+  ko: {
+    "nav": {
+      "home": "홈",
+      "dashboard": "대시보드",
+      "generate": "콘텐츠 생성기",
+      "billing": "결제 관리"
+    },
+    "auth": {
+      "login": "로그인",
+      "settings": "설정",
+      "admin": "관리자 페이지",
+      "logout": "로그아웃"
+    },
+    "hero": {
+      "title": "CopyBoost AI로 몇 초 만에 상품 설명을 작성하세요",
+      "description": "Trendyol, Amazon, Shopify 등 주요 채널에 맞춘 SEO 친화적인 설명과 메타 요소를 구독 형태로 제공합니다.",
+      "primaryCta": "무료로 시작하기",
+      "secondaryCtaLoggedIn": "계속 생성하기",
+      "secondaryCtaLoggedOut": "생성 시작",
+      "sampleHeading": "예시 출력",
+      "sampleProductLabel": "상품",
+      "sampleLongLabel": "상세 설명",
+      "sampleMetaTitle": "메타 제목",
+      "sampleMetaDescription": "메타 설명",
+      "sampleProductValue": "유기농 면 티셔츠",
+      "sampleLongText": "통기성이 좋은 원단과 미니멀한 디자인으로 일상 코디에 적합합니다. 100% GOTS 인증 유기농 면을 사용했습니다.",
+      "sampleMetaTitleValue": "유기농 면 티셔츠 | 여름 필수템",
+      "sampleMetaDescriptionValue": "부드럽고 지속 가능한 면 소재, 빠른 배송.",
+      "sampleTags": ["유기농", "면 티셔츠", "지속가능", "유니섹스"]
+    },
+    "plan": {
+      "planLabel": "플랜",
+      "dailyQuota": "일일 제한",
+      "dailyRemaining": "오늘 남은 횟수",
+      "dailyUsed": "오늘 사용",
+      "monthlyUsage": "이번 달 사용량",
+      "periodRemaining": "남은 기간",
+      "unspecified": "미정",
+      "updating": "업데이트 중...",
+      "loading": "로딩 중..."
+    },
+    "features": [
+      {
+        "title": "즉시 완성형 문구",
+        "description": "상품명만 입력하면 길고 짧은 설명을 즉시 생성합니다."
+      },
+      {
+        "title": "마켓별 최적화",
+        "description": "Trendyol, Amazon, Shopify 등 채널에 맞춘 형식과 톤."
+      },
+      {
+        "title": "일관된 품질",
+        "description": "모든 SKU에서 안정적인 SEO 성능을 제공합니다."
+      },
+      {
+        "title": "시간 절약",
+        "description": "문구 작성 시간을 운영과 성장 전략에 집중하세요."
+      }
+    ],
+    "common": {
+      "loading": "로딩 중...",
+      "redirecting": "이동 중...",
+      "copy": "복사",
+      "copied": "복사 완료",
+      "copyTooltip": "결과 복사",
+      "close": "닫기",
+      "save": "저장",
+      "saving": "저장 중...",
+      "delete": "삭제",
+      "deleting": "삭제 중...",
+      "confirm": "확인",
+      "cancel": "취소",
+      "edit": "편집",
+      "success": "성공",
+      "error": "오류"
+    },
+    "authPages": {
+      "login": {
+        "badge": "로그인",
+        "heading": "CopyBoost AI 계정에 로그인",
+        "description": "이메일과 비밀번호를 입력하세요.",
+        "emailPlaceholder": "이메일",
+        "passwordPlaceholder": "비밀번호",
+        "submit": "로그인",
+        "loading": "확인 중...",
+        "requiredError": "이메일과 비밀번호는 필수입니다.",
+        "genericError": "알 수 없는 오류가 발생했습니다.",
+        "failed": "로그인 실패",
+        "success": "로그인 성공",
+        "google": "Google로 계속",
+        "switchText": "계정이 없으신가요?",
+        "switchLink": "지금 가입"
+      },
+      "register": {
+        "badge": "회원가입",
+        "heading": "무료로 시작하세요",
+        "description": "무료 플랜은 하루 5회, Pro 플랜은 무제한 생성이 가능합니다.",
+        "namePlaceholder": "이름",
+        "emailPlaceholder": "이메일",
+        "passwordPlaceholder": "비밀번호(8자 이상)",
+        "submit": "계정 만들기",
+        "loading": "생성 중...",
+        "success": "가입이 완료되었습니다. 이제 로그인할 수 있습니다.",
+        "requiredError": "이메일과 비밀번호는 필수입니다.",
+        "genericError": "알 수 없는 오류가 발생했습니다.",
+        "failed": "가입 실패",
+        "google": "Google로 가입",
+        "switchText": "이미 계정이 있나요?",
+        "switchLink": "로그인"
+      }
+    },
+    "dashboard": {
+      "title": "사용 현황",
+      "description": "모든 프롬프트와 AI 응답을 한눈에 확인하세요.",
+      "serverSync": "서버에서 기록을 불러오는 중...",
+      "cards": {
+        "totalContentLabel": "총 생성 수",
+        "savedCountLabel": "저장된 항목",
+        "recentUsageTitle": "오늘 사용량",
+        "planTitle": "플랜",
+        "newContentCta": "새 콘텐츠 생성",
+        "remoteSyncing": "서버 동기화 중"
+      },
+      "recentTitle": "최근 프롬프트와 결과",
+      "recentCta": "새 콘텐츠 만들기",
+      "recentEmpty": "저장된 기록이 없습니다. 상품을 입력해 결과를 확인해보세요.",
+      "previewMissingTitle": "제목 없음",
+      "previewMissingContent": "결과를 불러올 수 없습니다.",
+      "copyTooltip": "결과 복사",
+      "modal": {
+        "titleLabel": "제목",
+        "longLabel": "장문 설명",
+        "shortLabel": "단문 설명",
+        "seoTitleLabel": "SEO 제목",
+        "seoDescriptionLabel": "SEO 설명",
+        "tagsLabel": "태그"
+      },
+      "close": "닫기"
+    },
+    "billing": {
+      "title": "구독 관리",
+      "description": "Stripe Checkout 및 고객 포털 통합용 플레이스홀더입니다.",
+      "planTitle": "현재 플랜",
+      "planDescription": "하루 5회 생성",
+      "upgradeButton": "Pro로 업그레이드",
+      "billingTitle": "결제",
+      "billingDescription": "Stripe 고객 포털에서 카드 정보를 수정하고 청구서를 확인할 수 있습니다.",
+      "portalButton": "Stripe 포털 열기"
+    },
+    "generate": {
+      "heroTitle": "상품 정보를 입력하고 AI 결과를 받아보세요",
+      "heroDescription": "Trendyol·Amazon·Shopify 및 SNS 판매자를 위해 초고속 SEO 설명과 메타 요소를 제공합니다.",
+      "limitReached": "오늘의 {{limit}}회 생성 한도를 모두 사용했습니다. 내일 다시 시도하거나 플랜을 업그레이드하세요.",
+      "limitReachedServer": "일일 한도가 초과되었습니다. 남은 횟수: 0 / {{limit}}",
+      "titleLabel": "상품 제목",
+      "titlePlaceholder": "예: 유기농 면 티셔츠",
+      "titleHint": "JavaScript 코드는 허용되지 않습니다.",
+      "categoryLabel": "카테고리",
+      "platformLabel": "플랫폼",
+      "languageLabel": "목표 언어",
+      "toneLabel": "톤",
+      "categories": {
+        "giyim": "👕 의류 & 패션",
+        "elektronik": "🔌 전자제품",
+        "kozmetik": "💄 뷰티 & 케어",
+        "ev-yasam": "🏠 홈 & 리빙",
+        "spor-outdoor": "🏃‍♂️ 스포츠 & 아웃도어",
+        "anne-bebek": "🍼 육아 & 출산",
+        "pet": "🐾 반려동물",
+        "market": "🛒 마트 & 식품",
+        "oto-aksesuar": "🚗 자동차 & 액세서리",
+        "hobi-sanat": "🎨 취미 & 예술"
+      },
+      "platforms": {
+        "trendyol": "🧡 Trendyol",
+        "hepsiburada": "🟠 Hepsiburada",
+        "amazon": "🛒 Amazon",
+        "shopify": "🛍️ Shopify",
+        "etsy": "🧵 Etsy",
+        "aliexpress": "🌏 AliExpress",
+        "instagram": "📸 Instagram",
+        "tiktok": "🎵 TikTok",
+        "facebook": "📘 Facebook",
+        "youtube": "▶️ YouTube",
+        "pinterest": "📌 Pinterest"
+      },
+      "languages": {
+        "tr": "🇹🇷 터키어",
+        "en": "🇺🇸 영어",
+        "de": "🇩🇪 독일어",
+        "fr": "🇫🇷 프랑스어",
+        "es": "🇪🇸 스페인어",
+        "it": "🇮🇹 이탈리아어",
+        "ar": "🇸🇦 아랍어",
+        "ru": "🇷🇺 러시아어",
+        "zh": "🇨🇳 중국어",
+        "ko": "🇰🇷 한국어",
+        "ja": "🇯🇵 일본어",
+        "nl": "🇳🇱 네덜란드어",
+        "pt": "🇵🇹 포르투갈어",
+        "el": "🇬🇷 그리스어",
+        "bg": "🇧🇬 불가리아어",
+        "az": "🇦🇿 아제르바이잔어"
+      },
+      "tones": {
+        "resmi": "🏛️ 포멀",
+        "samimi": "🤗 친근",
+        "eglenceli": "🎉 재미있음",
+        "teknik": "🧠 기술적",
+        "ikna-edici": "🧲 설득형",
+        "hikaye": "📖 스토리텔링",
+        "minimal": "🌿 미니멀",
+        "premium": "💎 프리미엄",
+        "dinamik": "⚡ 역동적",
+        "acil-kampanya": "⏱️ 긴급 / FOMO"
+      },
+      "button": {
+        "default": "생성",
+        "loading": "생성 중...",
+        "checking": "한도 확인 중..."
+      },
+      "errors": {
+        "missingTitle": "유효한 상품 제목을 입력하세요.",
+        "noJavascript": "제목에는 JavaScript 코드를 사용할 수 없습니다.",
+        "clipboardUnsupported": "브라우저가 클립보드를 지원하지 않습니다.",
+        "copyFailed": "복사에 실패했습니다.",
+        "apiErrorPrefix": "API 오류",
+        "unknown": "알 수 없는 오류"
+      },
+      "usageLabel": "오늘 사용량: {{count}} / {{limit}}",
+      "usageServerLabel": "(서버 잔여량: {{remaining}})",
+      "resultsTitle": "결과",
+      "resultStatus": {
+        "sending": "요청 전송 중",
+        "ready": "완료",
+        "draft": "임시 저장"
+      },
+      "fields": {
+        "long": "장문 설명",
+        "short": "단문 설명",
+        "seoMeta": "SEO 메타",
+        "tags": "태그 / 키워드"
+      },
+      "placeholders": {
+        "long": "상품 정보를 입력하면 응답이 여기에 표시됩니다.",
+        "short": "핵심 포인트와 Bullet이 이곳에 나타납니다.",
+        "seoTitle": "메타 제목",
+        "seoDescription": "메타 설명 자리표시자."
+      }
+    },
+    "footer": {
+      "tagline": "SEO 친화적인 상품 문구를 몇 초 만에 작성하세요.",
+      "rights": "모든 권리 보유.",
+      "brand": "CopyBoost AI",
+      "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "쿠키 정책",
+        "paragraphs": [
+          "우리는 사이트 트래픽 분석과 경험 최적화를 위해 쿠키를 사용합니다.",
+          "쿠키 사용에 동의하면 귀하의 데이터는 다른 사용자 데이터와 함께 집계됩니다."
+        ],
+        "acceptButton": "동의"
+      }
+    },
+    "settings": {
+      "badge": "프로필 & 보안",
+      "title": "계정 설정",
+      "description": "정보를 업데이트하고 비밀번호를 변경하세요. 보안을 위해 이메일은 변경할 수 없습니다.",
+      "statusBadge": "로그인됨",
+      "profileCard": {
+        "title": "프로필 정보",
+        "subtitle": "이름을 수정할 수 있으며 이메일은 고정됩니다.",
+        "nameLabel": "이름",
+        "namePlaceholder": "예: 김서연",
+        "emailLabel": "이메일(변경 불가)",
+        "saveButton": "프로필 저장"
+      },
+      "passwordCard": {
+        "title": "비밀번호 & 보안",
+        "subtitle": "강력한 비밀번호를 설정하세요. 변경 시 현재 비밀번호를 확인합니다.",
+        "currentLabel": "현재 비밀번호",
+        "newLabel": "새 비밀번호",
+        "chipLength": "최소 8자",
+        "chipEmail": "이메일 고정",
+        "saveButton": "비밀번호 업데이트",
+        "savingText": "비밀번호 변경 중..."
+      },
+      "usageCard": {
+        "title": "플랜 & 사용량",
+        "planLabel": "플랜",
+        "dailyLimit": "일일 한도",
+        "dailyUsed": "오늘 사용",
+        "remaining": "잔여",
+        "monthlyUsage": "월간 사용량",
+        "unlimited": "무제한",
+        "empty": "-"
+      },
+      "securityCard": {
+        "title": "보안 알림",
+        "body": "이메일은 변경할 수 없으며 비밀번호 변경 시 현재 비밀번호 확인이 필요합니다. 정보를 타인과 공유하지 마세요."
+      },
+      "apiCard": {
+        "title": "API 키",
+        "description": "사용 가능 시 전용 키가 표시됩니다. 접근은 제한되어 있으며 support@copyboost.ai 로 문의하세요.",
+        "placeholder": "sk-live-*************"
+      },
+      "states": {
+      "loading": "로딩 중...",
+      "loginRequired": "설정을 관리하려면 로그인해야 합니다. 이동 중..."
+      }
+    }
+  },
+  ru: {
+    "nav": {
+      "home": "Главная",
+      "dashboard": "Панель",
+      "generate": "Генератор",
+      "billing": "Подписка"
+    },
+    "auth": {
+      "login": "Войти",
+      "settings": "Настройки",
+      "admin": "Админ",
+      "logout": "Выйти"
+    },
+    "hero": {
+      "title": "Создавайте описания товаров за секунды с CopyBoost AI",
+      "description": "SEO‑оптимизированные описания, мета‑теги и подсказки для Trendyol, Amazon, Shopify и соцсетей. Подписка помогает масштабироваться безопасно.",
+      "primaryCta": "Попробовать бесплатно",
+      "secondaryCtaLoggedIn": "Продолжить генерацию",
+      "secondaryCtaLoggedOut": "Начать создавать",
+      "sampleHeading": "Пример результата",
+      "sampleProductLabel": "Товар",
+      "sampleLongLabel": "Длинное описание",
+      "sampleMetaTitle": "Meta title",
+      "sampleMetaDescription": "Meta description",
+      "sampleProductValue": "Футболка из органического хлопка",
+      "sampleLongText": "Дышащая ткань и минималистичный крой для повседневных образов. 100% органический хлопок с сертификатом GOTS, мягкий даже для чувствительной кожи.",
+      "sampleMetaTitleValue": "Органическая хлопковая футболка | Лето",
+      "sampleMetaDescriptionValue": "Мягкая, устойчивая к износу, быстрая доставка.",
+      "sampleTags": ["органическая", "хлопок", "устойчивость", "унисекс"]
+    },
+    "plan": {
+      "planLabel": "Тариф",
+      "dailyQuota": "Дневной лимит",
+      "dailyRemaining": "Осталось сегодня",
+      "dailyUsed": "Использовано сегодня",
+      "monthlyUsage": "За месяц",
+      "periodRemaining": "До конца периода",
+      "unspecified": "Не указано",
+      "updating": "Обновляется...",
+      "loading": "Загрузка..."
+    },
+    "features": [
+      {
+        "title": "Готовый текст за секунды",
+        "description": "Длинные и короткие описания сразу после ввода названия."
+      },
+      {
+        "title": "Совместимость с площадками",
+        "description": "Автоформат для Trendyol, Amazon, Shopify и других."
+      },
+      {
+        "title": "Стабильное качество",
+        "description": "Одинаково сильный SEO‑текст для каждого SKU."
+      },
+      {
+        "title": "Экономия времени",
+        "description": "Освободите часы для операционки и роста бизнеса."
+      }
+    ],
+    "common": {
+      "loading": "Загрузка...",
+      "redirecting": "Перенаправляем...",
+      "copy": "Копировать",
+      "copied": "Скопировано",
+      "copyTooltip": "Копировать результат",
+      "close": "Закрыть",
+      "save": "Сохранить",
+      "saving": "Сохранение...",
+      "delete": "Удалить",
+      "deleting": "Удаление...",
+      "confirm": "Подтвердить",
+      "cancel": "Отмена",
+      "edit": "Редактировать",
+      "success": "Успех",
+      "error": "Ошибка"
+    },
+    "authPages": {
+      "login": {
+        "badge": "Войти",
+        "heading": "Войдите в CopyBoost AI",
+        "description": "Используйте e‑mail и пароль.",
+        "emailPlaceholder": "E-mail",
+        "passwordPlaceholder": "Пароль",
+        "submit": "Войти",
+        "loading": "Проверяем...",
+        "requiredError": "E-mail и пароль обязательны.",
+        "genericError": "Непредвиденная ошибка.",
+        "failed": "Войти не удалось",
+        "success": "Успешный вход.",
+        "google": "Войти через Google",
+        "switchText": "Нет аккаунта?",
+        "switchLink": "Создать"
+      },
+      "register": {
+        "badge": "Регистрация",
+        "heading": "Начните бесплатно",
+        "description": "На бесплатном тарифе 5 генераций в день, на Pro — безлимит.",
+        "namePlaceholder": "Имя",
+        "emailPlaceholder": "E-mail",
+        "passwordPlaceholder": "Пароль (мин. 8 символов)",
+        "submit": "Создать аккаунт",
+        "loading": "Создаём...",
+        "success": "Регистрация прошла успешно!",
+        "requiredError": "E-mail и пароль обязательны.",
+        "genericError": "Непредвиденная ошибка.",
+        "failed": "Регистрация не удалась",
+        "google": "Продолжить через Google",
+        "switchText": "Уже есть аккаунт?",
+        "switchLink": "Войти"
+      }
+    },
+    "dashboard": {
+      "title": "Сводка использования",
+      "description": "Следите за запросами и ответами ИИ.",
+      "serverSync": "Получаем историю с сервера...",
+      "cards": {
+        "totalContentLabel": "Всего контента",
+        "savedCountLabel": "Сохранённые материалы",
+        "recentUsageTitle": "Сегодня",
+        "planTitle": "Тариф",
+        "newContentCta": "Создать контент",
+        "remoteSyncing": "Синхронизация..."
+      },
+      "recentTitle": "Недавние запросы",
+      "recentCta": "Создать новый",
+      "recentEmpty": "Пока нет сохранённых запросов. Добавьте товар, чтобы увидеть результат.",
+      "previewMissingTitle": "Название отсутствует",
+      "previewMissingContent": "Не удалось загрузить контент",
+      "copyTooltip": "Копировать результат",
+      "modal": {
+        "titleLabel": "Название",
+        "longLabel": "Длинный текст",
+        "shortLabel": "Короткий текст",
+        "seoTitleLabel": "SEO Title",
+        "seoDescriptionLabel": "SEO Description",
+        "tagsLabel": "Теги"
+      },
+      "close": "Закрыть"
+    },
+    "billing": {
+      "title": "Управление подписками",
+      "description": "Плейсхолдер для Stripe Checkout и клиентского портала.",
+      "planTitle": "Текущий тариф",
+      "planDescription": "5 генераций в день",
+      "upgradeButton": "Перейти на Pro",
+      "billingTitle": "Оплата",
+      "billingDescription": "После подключения портала Stripe клиенты смогут обновлять карты и просматривать счета.",
+      "portalButton": "Открыть портал Stripe"
+    },
+    "generate": {
+      "heroTitle": "Введите данные товара и получите результат ИИ",
+      "heroDescription": "CopyBoost AI создаёт SEO‑описания, мета‑теги и список тегов для маркетплейсов и соцсетей за секунды.",
+      "limitReached": "Дневной лимит {{limit}} исчерпан. Попробуйте завтра или обновите тариф.",
+      "limitReachedServer": "Лимит исчерпан. Осталось: 0 / {{limit}}",
+      "titleLabel": "Название товара",
+      "titlePlaceholder": "Например: органическая хлопковая футболка",
+      "titleHint": "JavaScript не допускается",
+      "categoryLabel": "Категория",
+      "platformLabel": "Платформа",
+      "languageLabel": "Целевой язык",
+      "toneLabel": "Тон",
+      "categories": {
+        "giyim": "👕 Одежда и мода",
+        "elektronik": "🔌 Электроника",
+        "kozmetik": "💄 Красота и уход",
+        "ev-yasam": "🏠 Дом и интерьер",
+        "spor-outdoor": "🏃‍♂️ Спорт и outdoor",
+        "anne-bebek": "🍼 Мама и малыш",
+        "pet": "🐾 Зоотовары",
+        "market": "🛒 Продукты и маркет",
+        "oto-aksesuar": "🚗 Авто и аксессуары",
+        "hobi-sanat": "🎨 Хобби и творчество"
+      },
+      "platforms": {
+        "trendyol": "🧡 Trendyol",
+        "hepsiburada": "🟠 Hepsiburada",
+        "amazon": "🛒 Amazon",
+        "shopify": "🛍️ Shopify",
+        "etsy": "🧵 Etsy",
+        "aliexpress": "🌏 AliExpress",
+        "instagram": "📸 Instagram",
+        "tiktok": "🎵 TikTok",
+        "facebook": "📘 Facebook",
+        "youtube": "▶️ YouTube",
+        "pinterest": "📌 Pinterest"
+      },
+      "languages": {
+        "tr": "🇹🇷 Турецкий",
+        "en": "🇺🇸 Английский",
+        "de": "🇩🇪 Немецкий",
+        "fr": "🇫🇷 Французский",
+        "es": "🇪🇸 Испанский",
+        "it": "🇮🇹 Итальянский",
+        "ar": "🇸🇦 Арабский",
+        "ru": "🇷🇺 Русский",
+        "zh": "🇨🇳 Китайский",
+        "ko": "🇰🇷 Корейский",
+        "ja": "🇯🇵 Японский",
+        "nl": "🇳🇱 Нидерландский",
+        "pt": "🇵🇹 Португальский",
+        "el": "🇬🇷 Греческий",
+        "bg": "🇧🇬 Болгарский",
+        "az": "🇦🇿 Азербайджанский"
+      },
+      "tones": {
+        "resmi": "🏛️ Формальный",
+        "samimi": "🤗 Дружелюбный",
+        "eglenceli": "🎉 Игривый",
+        "teknik": "🧠 Технический",
+        "ikna-edici": "🧲 Убедительный",
+        "hikaye": "📖 Сторителлинг",
+        "minimal": "🌿 Минималистичный",
+        "premium": "💎 Премиум",
+        "dinamik": "⚡ Динамичный",
+        "acil-kampanya": "⏱️ Срочный / FOMO"
+      },
+      "button": {
+        "default": "Сгенерировать",
+        "loading": "Генерация...",
+        "checking": "Проверяем лимит..."
+      },
+      "errors": {
+        "missingTitle": "Введите корректное название товара.",
+        "noJavascript": "JavaScript в названии запрещён.",
+        "clipboardUnsupported": "Буфер обмена не поддерживается.",
+        "copyFailed": "Не удалось скопировать.",
+        "apiErrorPrefix": "Ошибка API",
+        "unknown": "Неизвестная ошибка"
+      },
+      "usageLabel": "Сегодня: {{count}} / {{limit}}",
+      "usageServerLabel": "(на сервере осталось: {{remaining}})",
+      "resultsTitle": "Результаты",
+      "resultStatus": {
+        "sending": "Отправляем запрос",
+        "ready": "Готово",
+        "draft": "Черновик"
+      },
+      "fields": {
+        "long": "Длинное описание",
+        "short": "Короткое описание",
+        "seoMeta": "SEO метаданные",
+        "tags": "Теги / ключевые слова"
+      },
+      "placeholders": {
+        "long": "Заполните товар — ответ API появится здесь.",
+        "short": "Основные пункты и bullets будут здесь.",
+        "seoTitle": "Meta title",
+        "seoDescription": "Meta description placeholder."
+      }
+    },
+    "footer": {
+      "tagline": "Создавайте SEO‑оптимизированные тексты за секунды.",
+      "rights": "Все права защищены.",
+      "brand": "CopyBoost AI",
+      "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Политика cookies",
+        "paragraphs": [
+          "Мы используем cookies, чтобы анализировать трафик и улучшать опыт на сайте.",
+          "Приняв cookies, вы соглашаетесь на объединение своих данных с данными других пользователей."
+        ],
+        "acceptButton": "Принять"
+      }
+    },
+    "settings": {
+      "badge": "Профиль и безопасность",
+      "title": "Настройки аккаунта",
+      "description": "Обновляйте данные и меняйте пароль. Электронная почта зафиксирована из соображений безопасности.",
+      "statusBadge": "Вошли",
+      "profileCard": {
+        "title": "Профиль",
+        "subtitle": "Имя можно обновить, e-mail остаётся прежним.",
+        "nameLabel": "Имя",
+        "namePlaceholder": "Например: Анна Иванова",
+        "emailLabel": "E-mail (нельзя изменить)",
+        "saveButton": "Сохранить профиль"
+      },
+      "passwordCard": {
+        "title": "Пароль и безопасность",
+        "subtitle": "Задайте сложный пароль. Для смены нужно подтвердить текущий.",
+        "currentLabel": "Текущий пароль",
+        "newLabel": "Новый пароль",
+        "chipLength": "Мин. 8 символов",
+        "chipEmail": "E-mail фиксирован",
+        "saveButton": "Обновить пароль",
+        "savingText": "Обновляем пароль..."
+      },
+      "usageCard": {
+        "title": "Тариф и использование",
+        "planLabel": "Тариф",
+        "dailyLimit": "Дневной лимит",
+        "dailyUsed": "Сегодня использовано",
+        "remaining": "Осталось",
+        "monthlyUsage": "За месяц",
+        "unlimited": "Безлимит",
+        "empty": "-"
+      },
+      "securityCard": {
+        "title": "Напоминание о безопасности",
+        "body": "E-mail изменить нельзя, для смены пароля требуется подтверждение. Никогда не делитесь своими данными."
+      },
+      "apiCard": {
+        "title": "API ключ",
+        "description": "Персональные ключи появятся здесь, когда станут доступны. Доступ ограничен — напишите на support@copyboost.ai.",
+        "placeholder": "sk-live-*************"
+      },
+      "states": {
+        "loading": "Загрузка...",
+        "loginRequired": "Нужно войти, чтобы управлять настройками. Перенаправляем..."
+      }
+    }
+  },
+  ja: {
+    "nav": {
+      "home": "ホーム",
+      "dashboard": "ダッシュボード",
+      "generate": "コンテンツ生成",
+      "billing": "請求管理"
+    },
+    "auth": {
+      "login": "ログイン",
+      "settings": "設定",
+      "admin": "管理ページ",
+      "logout": "ログアウト"
+    },
+    "hero": {
+      "title": "CopyBoost AI で数秒以内に商品説明を作成",
+      "description": "Trendyol、Amazon、Shopify など主要チャネル向けの SEO 対応説明・メタ要素・タグをサブスクリプション形式で提供します。",
+      "primaryCta": "無料で試す",
+      "secondaryCtaLoggedIn": "生成を続ける",
+      "secondaryCtaLoggedOut": "今すぐ始める",
+      "sampleHeading": "サンプル出力",
+      "sampleProductLabel": "商品",
+      "sampleLongLabel": "長文説明",
+      "sampleMetaTitle": "Meta title",
+      "sampleMetaDescription": "Meta description",
+      "sampleProductValue": "オーガニックコットン T シャツ",
+      "sampleLongText": "通気性の高い生地とミニマルなデザインで毎日のコーデに最適。GOTS 認証のオーガニックコットン 100% を使用。",
+      "sampleMetaTitleValue": "オーガニックコットン T シャツ | サマーエッセンシャル",
+      "sampleMetaDescriptionValue": "柔らかくサステナブルなコットン素材。スピード配送。",
+      "sampleTags": ["オーガニック", "コットン", "サステナブル", "ユニセックス"]
+    },
+    "plan": {
+      "planLabel": "プラン",
+      "dailyQuota": "1 日の上限",
+      "dailyRemaining": "本日の残り",
+      "dailyUsed": "本日の使用",
+      "monthlyUsage": "今月の使用",
+      "periodRemaining": "残り期間",
+      "unspecified": "未設定",
+      "updating": "更新中...",
+      "loading": "読み込み中..."
+    },
+    "features": [
+      {
+        "title": "数秒で完成",
+        "description": "商品名を入力するだけで長文・短文どちらの説明も即時生成します。"
+      },
+      {
+        "title": "マルチチャネル対応",
+        "description": "Trendyol、Amazon、Shopify など各マーケットに合わせた形式とトーン。"
+      },
+      {
+        "title": "品質の一貫性",
+        "description": "すべての SKU で安定した SEO 品質を確保します。"
+      },
+      {
+        "title": "時間を節約",
+        "description": "コピー作成に費やしていた時間を運用や成長戦略に回せます。"
+      }
+    ],
+    "common": {
+      "loading": "読み込み中...",
+      "redirecting": "リダイレクト中...",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "copyTooltip": "結果をコピー",
+      "close": "閉じる",
+      "save": "保存",
+      "saving": "保存中...",
+      "delete": "削除",
+      "deleting": "削除中...",
+      "confirm": "確認",
+      "cancel": "キャンセル",
+      "edit": "編集",
+      "success": "成功",
+      "error": "エラー"
+    },
+    "authPages": {
+      "login": {
+        "badge": "ログイン",
+        "heading": "CopyBoost AI アカウントにログイン",
+        "description": "メールアドレスとパスワードを入力してください。",
+        "emailPlaceholder": "メールアドレス",
+        "passwordPlaceholder": "パスワード",
+        "submit": "ログイン",
+        "loading": "確認中...",
+        "requiredError": "メールアドレスとパスワードは必須です。",
+        "genericError": "予期しないエラーが発生しました。",
+        "failed": "ログインに失敗しました",
+        "success": "ログイン成功",
+        "google": "Google で続行",
+        "switchText": "アカウントをお持ちでないですか？",
+        "switchLink": "新規登録"
+      },
+      "register": {
+        "badge": "登録",
+        "heading": "無料で始める",
+        "description": "Free プランは 1 日 5 回、Pro プランは無制限で生成できます。",
+        "namePlaceholder": "氏名",
+        "emailPlaceholder": "メールアドレス",
+        "passwordPlaceholder": "パスワード (8 文字以上)",
+        "submit": "アカウント作成",
+        "loading": "作成中...",
+        "success": "登録が完了しました！ログインできます。",
+        "requiredError": "メールアドレスとパスワードは必須です。",
+        "genericError": "予期しないエラーが発生しました。",
+        "failed": "登録に失敗しました",
+        "google": "Google で登録",
+        "switchText": "すでにアカウントがありますか？",
+        "switchLink": "ログイン"
+      }
+    },
+    "dashboard": {
+      "title": "利用状況サマリー",
+      "description": "すべてのプロンプトと AI 応答を追跡して、生成フローを把握しましょう。",
+      "serverSync": "サーバーから履歴を取得しています...",
+      "cards": {
+        "totalContentLabel": "生成コンテンツ数",
+        "savedCountLabel": "保存済みアイテム",
+        "recentUsageTitle": "今日の利用",
+        "planTitle": "プラン",
+        "newContentCta": "新しいコンテンツを作成",
+        "remoteSyncing": "サーバー同期中"
+      },
+      "recentTitle": "最近のプロンプトと結果",
+      "recentCta": "新しいコンテンツを作成",
+      "recentEmpty": "保存されたプロンプトはまだありません。商品を入力して結果を確認しましょう。",
+      "previewMissingTitle": "タイトルがありません",
+      "previewMissingContent": "コンテンツを読み込めませんでした",
+      "copyTooltip": "結果をコピー",
+      "modal": {
+        "titleLabel": "タイトル",
+        "longLabel": "長文説明",
+        "shortLabel": "短文説明",
+        "seoTitleLabel": "SEO タイトル",
+        "seoDescriptionLabel": "SEO 説明",
+        "tagsLabel": "タグ"
+      },
+      "close": "閉じる"
+    },
+    "billing": {
+      "title": "サブスクリプション管理",
+      "description": "Stripe Checkout とカスタマーポータル統合用のプレースホルダーです。",
+      "planTitle": "現在のプラン",
+      "planDescription": "1 日 5 件の生成",
+      "upgradeButton": "Pro にアップグレード",
+      "billingTitle": "請求",
+      "billingDescription": "Stripe ポータルを接続すると、カード情報の更新や請求書確認が可能になります。",
+      "portalButton": "Stripe ポータルを開く"
+    },
+    "generate": {
+      "heroTitle": "商品情報を入力して AI の出力を受け取る",
+      "heroDescription": "CopyBoost AI はマーケットプレイスと SNS 販売者のために、数秒で SEO 対応の説明・メタタイトル・タグを作成します。",
+      "limitReached": "本日の {{limit}} 回の生成上限に達しました。明日再試行するか、プランをアップグレードしてください。",
+      "limitReachedServer": "今日の残りは 0 / {{limit}} です。",
+      "titleLabel": "商品タイトル",
+      "titlePlaceholder": "例：オーガニックコットン T シャツ",
+      "titleHint": "JavaScript コードは使用できません",
+      "categoryLabel": "カテゴリ",
+      "platformLabel": "プラットフォーム",
+      "languageLabel": "ターゲット言語",
+      "toneLabel": "トーン",
+      "categories": {
+        "giyim": "👕 アパレル & ファッション",
+        "elektronik": "🔌 家電・ガジェット",
+        "kozmetik": "💄 ビューティー & ケア",
+        "ev-yasam": "🏠 ホーム & リビング",
+        "spor-outdoor": "🏃‍♂️ スポーツ & アウトドア",
+        "anne-bebek": "🍼 ママ & ベビー",
+        "pet": "🐾 ペット用品",
+        "market": "🛒 マーケット & フード",
+        "oto-aksesuar": "🚗 自動車 & アクセサリー",
+        "hobi-sanat": "🎨 ホビー & アート"
+      },
+      "platforms": {
+        "trendyol": "🧡 Trendyol",
+        "hepsiburada": "🟠 Hepsiburada",
+        "amazon": "🛒 Amazon",
+        "shopify": "🛍️ Shopify",
+        "etsy": "🧵 Etsy",
+        "aliexpress": "🌏 AliExpress",
+        "instagram": "📸 Instagram",
+        "tiktok": "🎵 TikTok",
+        "facebook": "📘 Facebook",
+        "youtube": "▶️ YouTube",
+        "pinterest": "📌 Pinterest"
+      },
+      "languages": {
+        "tr": "🇹🇷 トルコ語",
+        "en": "🇺🇸 英語",
+        "de": "🇩🇪 ドイツ語",
+        "fr": "🇫🇷 フランス語",
+        "es": "🇪🇸 スペイン語",
+        "it": "🇮🇹 イタリア語",
+        "ar": "🇸🇦 アラビア語",
+        "ru": "🇷🇺 ロシア語",
+        "zh": "🇨🇳 中国語",
+        "ko": "🇰🇷 韓国語",
+        "ja": "🇯🇵 日本語",
+        "nl": "🇳🇱 オランダ語",
+        "pt": "🇵🇹 ポルトガル語",
+        "el": "🇬🇷 ギリシャ語",
+        "bg": "🇧🇬 ブルガリア語",
+        "az": "🇦🇿 アゼルバイジャン語"
+      },
+      "tones": {
+        "resmi": "🏛️ フォーマル",
+        "samimi": "🤗 カジュアル",
+        "eglenceli": "🎉 ポップ",
+        "teknik": "🧠 テクニカル",
+        "ikna-edici": "🧲 説得力",
+        "hikaye": "📖 ストーリーテリング",
+        "minimal": "🌿 ミニマル",
+        "premium": "💎 プレミアム",
+        "dinamik": "⚡ ダイナミック",
+        "acil-kampanya": "⏱️ 緊急 / FOMO"
+      },
+      "button": {
+        "default": "生成する",
+        "loading": "生成中...",
+        "checking": "残りを確認中..."
+      },
+      "errors": {
+        "missingTitle": "有効な商品タイトルを入力してください。",
+        "noJavascript": "タイトルに JavaScript コードは使用できません。",
+        "clipboardUnsupported": "クリップボードがサポートされていません。",
+        "copyFailed": "コピーに失敗しました。",
+        "apiErrorPrefix": "API エラー",
+        "unknown": "不明なエラー"
+      },
+      "usageLabel": "本日の使用：{{count}} / {{limit}}",
+      "usageServerLabel": "(サーバー残り：{{remaining}})",
+      "resultsTitle": "結果",
+      "resultStatus": {
+        "sending": "リクエスト送信中",
+        "ready": "完了",
+        "draft": "下書き"
+      },
+      "fields": {
+        "long": "長文説明",
+        "short": "短文説明",
+        "seoMeta": "SEO メタ",
+        "tags": "タグ / キーワード"
+      },
+      "placeholders": {
+        "long": "商品を入力するとここに API 応答が表示されます。",
+        "short": "ハイライトや箇条書きがここに表示されます。",
+        "seoTitle": "Meta title",
+        "seoDescription": "Meta description placeholder."
+      }
+    },
+    "footer": {
+      "tagline": "SEO に強い商品コピーを数秒で。",
+      "rights": "All rights reserved.",
+      "brand": "CopyBoost AI",
+      "linkLabel": "Murat Çakmak"
+    },
+    "legal": {
+      "cookiePolicy": {
+        "title": "Cookie ポリシー",
+        "paragraphs": [
+          "当サイトはトラフィック解析と体験向上のために Cookie を利用します。",
+          "Cookie を許可すると、データは他ユーザーのデータとともに集計されます。"
+        ],
+        "acceptButton": "同意する"
+      }
+    },
+    "settings": {
+      "badge": "プロフィール & セキュリティ",
+      "title": "アカウント設定",
+      "description": "情報を更新し、パスワードを変更します。セキュリティのためメールは固定です。",
+      "statusBadge": "ログイン中",
+      "profileCard": {
+        "title": "プロフィール情報",
+        "subtitle": "氏名は更新できますが、メールは変更できません。",
+        "nameLabel": "氏名",
+        "namePlaceholder": "例：山田 太郎",
+        "emailLabel": "メールアドレス（変更不可）",
+        "saveButton": "プロフィールを保存"
+      },
+      "passwordCard": {
+        "title": "パスワードとセキュリティ",
+        "subtitle": "強力なパスワードを設定しましょう。変更には現在のパスワード確認が必要です。",
+        "currentLabel": "現在のパスワード",
+        "newLabel": "新しいパスワード",
+        "chipLength": "最低 8 文字",
+        "chipEmail": "メールは固定",
+        "saveButton": "パスワードを更新",
+        "savingText": "更新中..."
+      },
+      "usageCard": {
+        "title": "プランと使用状況",
+        "planLabel": "プラン",
+        "dailyLimit": "1 日の上限",
+        "dailyUsed": "本日の使用",
+        "remaining": "残り",
+        "monthlyUsage": "今月の使用",
+        "unlimited": "無制限",
+        "empty": "-"
+      },
+      "securityCard": {
+        "title": "セキュリティの注意",
+        "body": "メールは変更できず、パスワード更新には確認が必要です。資格情報は共有しないでください。"
+      },
+      "apiCard": {
+        "title": "API キー",
+        "description": "利用可能になったらここに表示されます。アクセス制限がありますので support@copyboost.ai までご連絡ください。",
+        "placeholder": "sk-live-*************"
+      },
+      "states": {
+        "loading": "読み込み中...",
+        "loginRequired": "設定を管理するにはログインが必要です。リダイレクトしています..."
       }
     }
   },
@@ -2495,9 +3865,13 @@ export const languageMetadata: Record<string, LanguageMeta> = {
   de: { name: "Deutsch", flagIcon: "🇩🇪" },
   fr: { name: "French", flagIcon: "🇫🇷" },
   ar: { name: "Arabic", flagIcon: "🇸🇦" },
+  ru: { name: "Russian", flagIcon: "🇷🇺" },
   es: { name: "Spanish", flagIcon: "🇪🇸" },
   pt: { name: "Portuguese", flagIcon: "🇵🇹" },
   el: { name: "Greek", flagIcon: "🇬🇷" },
   bg: { name: "Bulgarian", flagIcon: "🇧🇬" },
   az: { name: "Azerbaijani", flagIcon: "🇦🇿" },
+  zh: { name: "Chinese", flagIcon: "🇨🇳" },
+  ko: { name: "Korean", flagIcon: "🇰🇷" },
+  ja: { name: "Japanese", flagIcon: "🇯🇵" },
 };
