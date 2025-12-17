@@ -3,5 +3,5 @@ Allow: /
 Disallow: /admin
 Disallow: /settings
 Disallow: /auth/
-Sitemap: https://copyboostai.xyz/sitemap.xml
+Sitemap: public/sitemap.xml
 Host: copyboostai.xyz
